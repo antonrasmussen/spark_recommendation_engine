@@ -1,0 +1,623 @@
+yeah thank you thank you so much Nathan uh it's always a pleasure to come back to data science Dojo
+um so I'm very excited to share uh this presentation with you on recommender systems and its design
+um as Nathan already mentioned um this is the part two of The Talk um and I think the part one is linked in
+the comments section so you can take a look at that um if you have some questions or you want to catch up on the background we
+will cover background in the stock so um so you know if if you're missed out on the part one then we will get some of
+that going here as well um so my name is Karthik Mohan and
+um I will be talking to you about recommender systems and its design um let me just move this out of the way
+yeah um yeah so let's get started um so a little bit about myself I read my PhD in
+electrical engineering at UW here in Seattle and then I worked at Amazon and at Amazon I got to work on a different a
+variety of problems including recommender systems and another detection uh to name a few uh so that's
+where I you know got my brush with recommended systems at industry level and then I worked at meta on a
+completely different uh set of projects mostly related to national language processing a national language
+Generation Um as we know generative AI is a very popular topic these days but that's not
+the focus of our talk today um and then I took a subatical and I was teaching courses at UW Seattle I'm still
+Affiliated as a professor at UW as a part-time commitment and then after the
+subtical I joined Chewie uh which is a pet company as a staff scientist where I
+currently work as well so that's a bit of a background about me just to you
+know fill going on with my pride experience and now we'll get started at today's stock
+Agenda
+um so today's talk I've kind of uh categorized this into four buckets uh one is more of introduction motivation
+it's always good to have motivation to know uh why do we care about recommended systems and what are some examples
+um a real world example so we will key into that in the first section and the second section is more uh of a technical
+Introduction and Motivation for Recommender Systems
+background just diving a little bit deeper into the models uh that we've already gone through in part one but
+we'll keep it short and then the third and fourth segments of today's talk are the real uh topics for today which is uh
+recommended system design and architecture and some popular recommender system uh scalable systems that get used in in the industry these
+days okay so let's start with part one um so a classic motivation for
+recommendation systems is Amazon if you look at any Amazon page you will see
+that it is Carousel based so carousels are these horizontal uh things that you can keep scrolling on uh which which
+Each of which might have a title for instance here you have add more to your card or recommend it for you or pick up
+where you left off and these things can help us add items to cart in a more in a more
+relevant way in a more personalized way um let's go to instacart uh this is a
+this is also uh from my instacart app and I use the byte again feature a lot
+so this is byte again that's showing up on my app um and that's one of the carousels
+um the other one is you may like and you may like an instacart is related to what
+I bought in the past but doesn't have to be exactly the same it could be some new products as well um that get shown for instance the Vita
+Coco uh coconut water the second one is not something I purchased but I God
+recommended that so you may like has things that I might I I may like which is not necessarily what I've bought in
+the past let's go to Netflix so Netflix uh also does recommendations on a carousel style
+uh this is again my own Netflix page from from sometime in the past
+um you can see the first category is popular uh on Netflix but this is popular Netflix personalized to me
+because it's popular on Netflix personalized to you would look different right and then there's personalized Trends what's trending right now again
+what's trending right now is personalized to me you can see there are some uh movies or Series in here that
+are not even in English language because I watch multiple I'm a multilingual so I I get recommendations from multiple
+languages so that's what we see in trending now as well and then a personalized genre which is futuristic
+sci-fi that shows up right at the top and I I'm into sci-fi so this is making a lot of sense to me the the way it's
+set up on Netflix LinkedIn recommendations again we're all on LinkedIn and we like to just go to
+the LinkedIn page uh and see what's coming up I like to scroll it's it's nice I learn a lot and here's an example
+of something I saw in the last few months on my feed where this post is
+about chat GPT and there was someone in my network who commented on a post of a
+person whose third in connection to me so this person's not related to me but their third connection but someone in my
+network commented on that post and hence it got recommended to me right so it's a
+similar user recommendation there is someone who's in my network and who saw something and they recommended but it's
+not just that it's also a relevant content so chat GPD and AI are things
+that I keep tab on and so this post in LinkedIn is is relevant to me as well so
+it's uh it's a combination of similar user and a relevant content okay so uh now that we've gone through
+Why Recommender Systems?
+some motivating examples and recommended systems uh you can already guess why do we care about recommender systems and
+why is regular systems useful in Industry um well if you look at Amazon Netflix or instacart
+um any of these uh you know companies that sell a lot of products they have they might have billions of products
+right and if you want to keep browsing through them searching through them it it's it's very time consuming so
+recommender systems can help customers save time so that's one of the big ones why companies invest in Recon resistors
+to help customers save time and purchase more products and also surface products are relevant among all the billion
+options or the million options that we have out there only a subset of them might be relevant to me and if if the
+company can sort of face it then it makes my life easier uh and it's a win-win situation
+it's also personalized so if you look at any genre on Netflix for example if you
+look at sci-fi genre your sci-fi genre the with the rose the movies that are listed in there would look completely
+different from mine because it's personalized so even though the genre is same the recommendations are different it's personalized
+and courage this is again connected to surfacing products uh there could be so
+many products that are available that might be relevant to my interests but
+it's it's hard to surface unless there is some kind of recruitment system that's covering for all the variety
+that's available out there so companies also invest in our system so that they can Surface more uh diverse products to
+customers and increase the sales of different categories of products right so coverage is also an important reason
+why uh companies invest in recognition systems so the lay of the land uh uh you know
+Lay of the Land: Part 1 and Part 2
+part one and part two this this I took the talk and kind of broke it up into part one part two uh and these are the
+things I wanted to cover in both these parts one part one and two uh examples and motivation deep down into
+collaborative filtering design principles architecture for recognition system design metrics for economic systems and recommended systems at optic
+so in part one we covered three of these uh which is listed on the left and then
+part of which is this talk we focus more on design principles and some design architecture and scalable scalable
+recommended system design as well so that's that's going to be more of our focus in this part
+um so before moving into the second uh segment of the stock uh I'll pause to see if we have any questions
+Question Break
+so we do have one uh well I guess there there are two comments but one is
+in the form of a question um Jorge is asking how do you see the opportunity to implement recommender
+systems uh or recommendation systems GPT based
+oh GPD based recommended systems uh I I I believe you know companies might
+already be starting to look into it um I I believe it's a big opportunity but
+um then again you know uh GPT based models are based on Transformers and
+Transformers are something that have already been used in recommended systems so it's not going to be a big jump to go
+to GPT for recognized systems but again uh with GPT we need to still do a lot of
+testing extensive testing um uh but yeah I think if if there are
+interfaces especially when you have chat board style interface where you can ask for things and then you get recommended
+that's where GPD will be even more helpful uh versus like a traditional static page where you get
+recommendations okay perfect and we can go on and continue okay so the second segment of today's
+Recap of Recommender Systems (Part 1)
+talk is going to be recap of fragmenter systems um that we covered in part one I'll
+focus on the most important ones that are uh useful for today's talk so the big picture uh is is on the types
+of recommendous systems right uh like like we spoke about you can have personalized recommendations and you can
+have unpersonalized recommendations so unpersonalized is easy usually it's like popular
+recommendations or sponsored products right so there are uh there are you know companies or products that want them to
+be surfaced uh and and they pay for it so that sponsored products and popular recommendations well these just have a
+lot of sales these movies get watched a lot but they may not necessarily be personalized to you they're just popular
+right so these are unpersonalized recommendations so that's easy uh personalized recommendations is going to
+be the focus of the stock right and so here we have like three different models uh that that are very very helpful to
+know so one is collaborative filtering which uses user Behavior customer Behavior the second is
+content-based filtering that uses content of products of movies of things that you know companies want to sell use
+the actual content information in some way shape or form to inform the recommendations so that's content-based
+filtering and the third one is Hybrid models which use both customer behavior
+and also content to inform recommendations so you can get the best of both worlds right
+so let's take a look at collaborative filtering to begin with um this is one of my favorite topics uh
+and this was also the um uh you know context for the Netflix
+million dollar price that happened a decade back where multiple teams were competing to see if they can take a
+crack at Netflix data set where Netflix had like a set of users or customers and
+movies and they had partial ratings for every movie from a user right so not all
+movies were rated by uh users and not all users rated every movie right so
+there was like a lot of missing ratings and the goal was to predict the missing ratings which was on the scale of one to
+five and the metric that was used was rmsc right and so they had a leaderboard going on this and you can see the rmsc
+is listed out the lower the rmsc the better so you can see the top team had a rmsc of 0.85 on the test data set
+um and and it was a nine almost 10 improvement over a Baseline model that Netflix had going at that time so uh and
+and the top team got a million dollars so that was the Netflix billion dollar price and uh most of these teams on the
+readable that we see here use collaborative filtering in some way shape or form right so collaborative filtering uh as a way
+of example I just use five users and five movies here as an example so let's say we had five users
+and then five movies Avatar arrival uh When Harry Met Sally Before Sunrise and
+minions um and let's say we have partial ratings instead of one to five you can have
+implicit ratings up or down right so up means you like this and down means you
+don't like this movie uh a lot of times uh for products that that are sold on
+Amazon or movies we may or may not get explicit ratings uh especially for
+movies on Netflix for instance or uh videos that you watch on YouTube uh you have to infer the rating so those are
+called implicit ratings because you have to infer it uh the data is not readily available but let's say you either
+infrared or you have it explicitly available but we'll just use thumbs up for I like it and thumbs down for I don't like it so you can see that this
+Matrix between users and movies is partially filled and the goal of collaborative filtering is to come
+deeply fill it so wherever we have question marks fill it in with thumbs up or thumbs down uh in a way that makes
+the most sense in a way that minimizes the root mean square error the metric that we saw on the previous slide right
+um so and then if we did fill it in we would have something like this right so here's uh where you can say well maybe
+Karthik which is myself is similar to anaga so maybe that's why I fill in uh
+thumbs up for arrival for myself right and a thumbs down for Before Sunrise for myself because I'm simultaneous but
+collaborative filtering can be much more complex than this it doesn't have to tag on to one user you can tag onto multiple
+users and also movies can tag onto each other so it's a very complex process
+um but it can be formulated through an algorithm like Matrix factorization or Matrix completion which is usually used
+to fill in this Matrix right and hence through collaborative filtering but the key idea is that we are tapping into
+user behavior of ratings to info on predictions and recommendations so we
+may not necessarily be using content of movies or understanding of the user to make these predictions right so
+behavioral data informs collaborative filtering um and like I said you can use Matrix
+completation for this so you're making missing ratings and then you have a matrix for users the red Matrix and the
+Matrix for movies which is the green Matrix and then let's say we have a user Amy and we have a movie our arrival and
+I want to know if Amy likes arrival then I take the user factor for Amy which is
+highlighted in yellow and I take the movie factor for arrival which is highlighted in pink and then I take a
+DOT product and I get a score so that score is some some float right so here it's 0.9 it's positive so if it's
+positive usually it means that you like it if it's negative you don't like it so here I would say well the model predicts
+that Amy likes arrival but here you know you might ask how do you actually learn this red Matrix and read Matrix right so
+that's where the engine behind collaborative filtering comes into play that's where we actually optimize a loss
+function and optimize for an error so this red and green Matrix is completely learned from the data so whatever data
+you actually know you learn it from there and then you make predictions so that's collaborative filtering
+um one issue with collaborative filtering is if you have a new movie that comes up let's say Men In Black the
+the latest Men In Black just came out and we don't have any ratings for them no one's watched Men In Black it's a
+brand new movie how do I recommend Men In Black the the new version of Men In Black to any customer or any user right
+so this is a this is what is called a cold start problem so when you have a new user or a new movie how do you make
+recommendations that's a cool start problem so this is where instead of collaborative filtering content-based
+filtering can help so what's content-based filtering so let's take an example let's take me Karthik I like or
+I have watched the movie arrival arrival is a sci-fi movie right it's it's uh it's futuristic sci-fi
+um and in terms of content arrival is the same genre as Men In Black right so
+if I can understand our decipher based on the content or like the description or the tags that we have for these
+movies these two movies are kind of similar then because I watched arrival and I liked it I may want to recommend
+Men In Black to myself right so the engine I want to recommend so that's content-based filtering this is
+something collaborative filtering would not be able to do because there's not enough user Behavior or uh ratings for
+for this movie so content-based filtering is able to fill in the gaps especially with uh with cold start cold
+start issues and cotton-based filtering uses something called embeddings you might
+have encoded this term before we discussed in part uh one of the talk uh what embeddings are and we went in a
+little bit of detail uh I'll not go too much in here but embeddings are a concise way to represent content for
+example movies or products so that you can compare them you can say if embeddings are close to each other
+they're similar the movies are similar the emitting are farther away from each other like for example minions and When
+Harry Met Sally they have kind of a larger angle in between them so the cosine similarity is smaller than they
+are dissimilar so embeddings can help us understand or help algorithms understand how to compare movies right and they
+don't have to be in two Dimensions this was a just a toy example they usually are in much higher Dimensions like 128
+Dimensions or 256 dimensions and they might have some latent Dimensions or understanding of what each of these
+floats in the embeddings represented right so we don't know that a prairie but you know after the fact we might say
+okay this is this Dimension represents comedy and romance or this Dimension represents Thriller and Adventure
+um and so on and so forth so after we have learned embeddings from the data we
+can infer what each dimension of the embeddings mean uh for the sake of interpretation right but uh that's
+something that that's usually done after the fact so embeddings are very very useful um you might have incarnated before and it's it's its key to
+content-based filtering okay so let me just uh know that we've
+kind of quickly done a recap on collaborative filtering content-based filtering let's just contrast the two
+approaches then you know kind of close on this so collaborative filtering the pros of this approach is it's faster
+train uh and fast to do inference because you just have to take a DOT product so inference time is quick and
+can recommend a variety of products right so it doesn't have to be related to what I've watched it can be very
+different I I could have watched Avatar and I get recommended minions because there are other users like me who watch
+a variety of things it doesn't have to be restricted to a genre so there can be a variety in the recommendations and it
+takes in behavioral signals right so that's a Pros the cons it cannot handle cold start users or products right like
+we saw um and it doesn't use content signals content-based filtering are the pros uh
+very good with cold star recommendations and it can recommend content similar to a given product or video so you might
+have seen this on uh Netflix or Amazon or other Pages where because you
+purchase a product or because you watched a movie you get recommended other set of movies or other sort of
+products to purchase right so uh and you will see title that says recommending
+this because you watch this movie so that's content-based filtering and so you can do things like that using
+content-based filtering the cons it's slower for training and inference because you have to learn these
+embeddings and uh there may be pairings between users and there may be pairwise
+interactions between users and products that can slow down training and also inference it doesn't take in user
+Behavior signals it only is based on content signals and therefore there's
+less coverage because you're always looking at products similar to what I have already purchased or already viewed
+or watched so that's the kind of the cons of content-based filtering okay so that's a recap of uh some of the
+things that that are essential for the next segment of the talk so we'll be moving into segment three but uh I'll
+Question Break
+just pause to see if you have any questions yes so first um I want to address I think it's true
+true c um truce we're going to keep your question for the end I think that's a
+better question for the end of this you might actually get it answered while we're going through the presentation so we're going to save that one
+um this one's from JC um how do you account for user preferences over time and how do we
+assess if accounting for time makes a difference in improving predictions
+uh that's a very good point um so there are different strategies uh
+one strategy that I have personally used in the past is to predict is to train on
+the past but predict for the recent past like recent three months so you you take
+your training data and then you break it up let's say last 12 months you break it up into nine months and three months you
+train on nine and predict on three so because you're predicting on three you're going to get metrics on the last
+three months those that's like the recent Behavior the recent Trends so you can see if your algorithm is still able
+to or your model still able to bias towards getting the rates and Trends right the other one
+um so that's that's setting up you know training in a way that can promote uh emphasis on a recent Behavior right and
+this is especially true for let's say if you're shopping on Amazon fashion fashion changes like that so you cannot
+use one year old Behavior to inform what the fashion trends are right now so you have to be current so it's it's pretty
+important for that uh same thing with trending videos Tick Tock uh YouTube shots again you cannot look at something
+that I've watched one year back and say well I will share this with you because it's not trending it's not going to be a
+good recommendation uh the second thing you can do is to incorporate features in the model
+that get weighted by recency right the more recent of uh impression is the more
+weight it gets the farther away the impression is the less weight it gets in your feature the way you've set up the
+features for the the you know the user or the content right and that way you
+can also incorporate in the model so one the first one that I described is a way to
+um train but also you can test right so you also have to put testing so you can also test the second one is a modeling
+change that can account for or bias the model towards more recent uh impressions
+yeah so hope that that's an answer for your question and then uh second quite next question
+before we move on um why don't you use public and complementary sources of
+of enrich collaborative part with magazines or something similar
+uh I didn't get that question so is the question why why not scrape public data
+to uh to build recommendation models is that yes or why not why don't you use something uh that's that's public or
+complementary source of of data
+so if you if you look at if you look at the recent Trend in uh Ai and you know
+generative Ai and things like that that's what's happening right so almost everyone is using pre-trained models and
+then fine-tuning it on their data set uh and when we look at content-based
+filtering in in the context of recommended systems content is language data right so natural language so
+Transformers are a natural fit for that and Transformers are pre-trained so that
+they'll be pre-trained on a very huge Corpus like you were mentioning uh but
+that's you know but but for your for your company specific recommendations you still need to fine tune so the fine
+tuning part still needs to be done on private data which is company specific um so that would still have to be done
+uh but yeah you can if using Transformers or other pre-trained models uh even if you have images in your
+products like videos or thumbnails uh for movies or images for products and
+you want to extract image features again you have pre-trained models for images that can be leveraged and then also fine
+tune on uh company specific Impressions data so yeah totally we can do that
+and then I lied this is this will be the last question before we move on um is it possible to use both filtering
+strategies together and like if so would that give you a better recommendation or
+anything like that yes and yes so we're going to discuss that in the next segment uh of the stock
+all right well then let's go ahead and move on yeah all right
+the next segment of the talk is on recommended system design and architecture so we've kind of you know so far we've kind of established sound
+Recommender System Design and Architecture
+ground like okay these are the basic models collaborative filtering content is base filtering and what are some
+things to keep in mind uh we kind of discussed that pros and cons so these are kind of like building blocks that we
+will now use into a full-blown recommender system the design and architecture right so for that let's
+look at design considerations what do companies care about when it comes to recommender systems like what are your
+not star like uh goals or metrics that you know we want to hit as far as design
+is concerned right so here are some things I've listed and this is not exhaustive by any means there could be
+many more that I missed here but these are definitely some of the important ones that companies would care about as
+far as fragmentation system is concerned so the first is relevance right if your recommendation is not relevant to me
+then why are you even building a recommended system so relevance is very important and we'll talk about how we measure it second is cold start there
+are new new products coming out every day on Amazon or instacart or you know
+any other retail site there are new movies coming out on Netflix new web series coming on Netflix if we if if
+Netflix doesn't surface it then I'm not going to watch it and if I don't watch it it's not going to get you know viewed
+and then so on and so forth so cold start recommendation is important so is the recommended system addressing that
+uh diversity so diversity is again related to coverage uh you know not just
+cold start but also even popular ones that don't necessarily fit in my uh you
+know purchase Behavior or my viewing Behavior maybe I don't watch Comedy but
+there's a really popular uh comedy series that just came out and I might be
+interested in that right so that is diversity as far as I'm concerned even though that's not cold start it's
+diversity right so that's a difference um so diversity is something that also companies can but like you know Tick
+Tock you want to show different things you know see make more videos viral blah blah blah so uh there could be many
+considerations for diversity that show up in uh you know different places where things get recommended right freshness
+um like Facebook about fashion uh you know things recommendations have to be fresh for certain categories right
+fashion is one example of that um trending videos again it has to be fresh you know things have to be recent
+um latency is a is an important design consideration uh for equator systems because uh you cannot sometimes just
+Store recommendations for a user it is just not feasible right if you're dealing with billions of uh you know you
+you know movies and millions of users you cannot be storing a you know a bunch of recommendations for every user
+because you know you may want to sort it filtrate re-rank it do a bunch of things or it's just not feasible the
+infrastructure doesn't support it so then you have to do inference in real time and that will incur latency and so
+we have to look at latency considerations as well uh fairness uh this is a new one
+um fairness is uh if there are two products or two movies on the market is one getting
+recommended more than the other for no particular reason then then we're not being fair to those set of movies or if
+one user is getting better recommendations than another user for whatever reason then you're not doing a
+good job so fairness is more about that either from the user's perspective or from the product side and then
+scalability this is one of the biggest ones um so we'll talk about a template here in the stock on scalable system
+design uh for recommended systems but uh you know when you go from 100 000 movies
+to a one million movies to 10 million movies to billion movies then the scaling changes the this design also
+changes right so these are some design concentrations so let's take a look at one at a time
+um relevance right so uh going back to the uh the Netflix example we had earlier I like Sci-Fi
+movies as a person like I I really like Sci-Fi movies so I see Sci-Fi recommendations as the first first genre
+on my Netflix page makes perfect sense it's relevant right now how do I measure
+relevance right so there are some metrics that are used to measure goodness of a model as far as relevance
+is concerned one is precision one is recall and in recommendations you see this Precision at K or average pressure
+at ku's a lot so this K is like the context window that you have
+um to show recommendation so we'll talk about it uh let's let's look at an example so using an example of uh purchases on a
+retail site like Amazon right um let's say the top row purchases is my
+purchase history right like I have just purchased this in the last one week what I would have purchased something similar
+in the last one week and then the second row is what the models uh recommendations are so the model is
+trying to recommend things that are close to what I purchased as a way of showing that it's actually capturing
+what I like right so I want to match the recommendations with my most recent purchases to show that yeah so what I'm
+recommending is what I would have purchased so that's good um so here if you look at Precision at
+four right I am actually limiting myself to the top four recommendations I'm not looking at all the recommendations I
+make why because sometimes you know you're using an app you're looking at recommendations on an app you're scrolling through instacart or or even
+on a web page you might have only like a context window of 10 or Phi right so it's good to know in that Phi context
+window uh size of conduction size 5 um is the model getting the right
+recommendations right is it showing something random or is it actually showing something relevant so limiting
+it to a context window and using precision and that helps me understand how well the model is doing so let's
+look at profession at four here so highlighted in pink uh in the recommendations tab are the ones the
+model got right because you can see vitamin water is present in the purchases and it got recommended at
+position number one and position number four but position two and three it didn't get it right because uh Ziploc
+and uh the serials Cascadia Farms wasn't in the purchases so we would say we don't we don't we don't uh that you
+didn't get it right there so now the pressure net four is two divided by four because four is the context window you
+got two right so that's 0.5 um now what happens if I swap vitamin
+water at position 4 here with a dark chocolate mocha almond as a as a
+recommendation you can see this uh this kind bar is not part of the purchases right so that means the number of
+recommendations I got right in a context window four is one so the pressure net four goes down from 0.5 to 0.25 so you
+can see this is able to capture uh you know if you're getting things right in a context window and we spoke
+about this in part one of the talk too uh you can refine this metric to also look at ordering like ranking so
+recommendations ranking metrics like we'll also use something like average question so we will not go into that but
+you get a drift higher the pressure at K the better your recommendations are right
+so that's that's one way to measure relevance offline let's look at diversity uh so diversity
+is very important like we spoke about and diversity in session is is is is is really useful for instance you're
+shopping on Amazon or you're shopping on instacart and you added uh Fiber One as the cereals to the card
+right now that I've added serious would you recommend cereals again
+or would you recommend something else right so in this example you might recommend coffee instead of seriously
+because you already added uh cereals to cart so it doesn't make sense to show the same thing when you've already added
+it to the cart so that's where diversity also plays a role so uh how do we measure diversity right here you can see
+that the volume which is represented by this parallelogram uh of adding Cheerios
+to the cart is less than the volume of adding Gevalia Coffee to the cart right
+so and a measure of diversity mathematically is the volume and volume
+is captured by determinant of the similarity Matrix so determinant of cellular matrix is a metric uh to
+measure diversity and you know people have optimized for it in in in the industry or in the literature as well so
+that's diversity right uh now let's look at latency
+we looked at um a matrix factorization um sorry once again
+so we looked at a matrix factorization as a collaborative filtering model for
+recommendation systems right so here Amy gets recommended arrival because the score is 0.9 which is positive which is
+significant and hence we'll say Amy like survival so what's the latency of this if we can cache the embeddings for the
+users which is Amy and other users and for movies which is arrival and other movies then when Amy shows up online
+we've we already have Ames embedding in Cache we can retrieve it and then we can
+have a you know candidate set of movies to pick from maybe we have thousand
+movies we've already kind of filtered out and we have thousand movies then we need to take thousand dot products and
+then you know sort it and then pick the highest top five that are the the top
+scoring ones and then recommend those uh for Amy as recommendations right so
+because we're able to cache in this in this in this particular example we might be saving only Legends if it didn't cash
+um you know so for for collaborative you will be caching so you would not be doing much uh anything else but we will
+look at models where it's not easy to cache and then you incur extra latency you can also maybe just store
+um uh recommendations for every user so when the user shows up you just show them that recommendations and that can
+work in certain contexts but if we look at session recommendations like we just saw earlier or we're looking at Large
+Scale recommendations then caching the recommendations becomes infeasible right
+and so you would have to use embeddings um and then cache them and then incur latency there as well so uh
+yeah so there are some tricks that can help with latency but we'll look more into this as well
+okay the next one uh next big one I want to talk about is scalability and this is a really big one so let's look at the
+context of movies right so you can have hundred thousand movies or one million movies or 10 million movies or 1 billion
+movies as candidates to recommend from um when we look at the segment of hundred thousand movies it's easy to
+train on 100 000 movies it's easy to predict and you might even have very low
+latency because a simple algorithm like collaborative filtering would work but as soon as you start going towards a
+billion scale then the trading process has become very complex and convoluted and you also incur higher latency during
+prediction time and you might not even have the latency budget uh to to push a single neural network model as the model
+for making predictions so um neural networks may not scale as this uh due to memory and compute constraints
+when you increase the scale of the data set right um and so you may need a multi-stage
+approach and we'll talk about this uh a popular architecture and someone
+asked this earlier can we combine collaborative filtering and content-based filtering and here's Twitter architecture that that does just
+that so we'll we'll use Twitter architecture as a starting point towards building a scalable recommender system
+right so what's what's the tutorial architecture so as it says here there
+are two towers so there is the user Tower and then there's the product over so in
+this particular example you see news but you can replace news with movies you can replace movies with
+um you know retail products you can replace it with anything else so essentially there's a user Tower or a
+customer Tower and there's a product Tower right uh what is this Tower doing it's getting refined features maybe
+through neural networks or through layers um so that we can use those features as
+embeddings and then take dot products right but it doesn't stop there in two
+Tower you can also have pairwise interactions between users and products so you're not just taking a DOT
+product between user embeddings and product embeddings like in collaborative
+filtering you might also have pay rise interactions which is where we incur extra latency like as we you know in in
+contrast to collaborative filtering this is where we incur extra latency when using the tutor architecture
+um but it's a hybrid model and it has its pros right
+um it it does collaborative filtering because it uses user Behavior if a user likes a news article or a movie you get
+a positive rating if you don't you get a rating and we're using that data so it does do collaborative filtering it also
+does content base filtering because you can start with a representation a raw representation of a news article or a
+product or a movie like you can have a back over words model and then build from there or you can use a pre-trained
+model let's say um we have you know language data we can pass it through a Transformer model and
+get Transformer embeddings as a starting point for a news article or for a product or for a movie right
+um so that enables content-based filtering because you can you can also take care of cold start right
+um so in terms of relevance yeah this this total architecture supports
+relevance right because we are using user behavior and we're also using content data uh we can do caching to
+some extent uh you know we can do caching until the point where the pair rise interactions start right so we can
+do some level of cashing here and that can reduce latency uh we can do cold
+start recommendations using content-based features just uh what about diversity tutor architecture as
+such may not promote diversity or support diversity but we can add a diversity filter or a re-ranker on top
+of this model right so we can add a layer after this to to filter for diversity
+and same thing for fairness we don't know if this model is going to be fair because models are as good as the data
+and and you might have seen this from your past experience that if there is bias in the data it's going to show up
+as bias in the model as well so fairness is a separate topic and we may have to still do evaluations separate evaluation
+to see if there's any major fairness issue uh that the studio architecture is incurring right
+um so we'll use the tutor as a starting point to build a scalable
+um multi-stage recommender system or talk about it in the next segment but before that I want to see if we have any
+Question Break
+questions and I'll pause here how we do and I am going to start you
+off with a question from Grace what's the usual criteria for precision
+and example is like in a movie recommender system
+criteria for precision uh uh so I I is that are you asking for
+threshold are you using asking for uh how do we measure precision
+uh Grace if you could clear that clarify that for me in the chat I would appreciate it and maybe we can Circle
+back once we have that Clarity um foreign we had a question and there was
+a question answered in the chat but I want to make sure everybody hears it um can you redefine uh what you mean by
+cold start so cold start is like we we have a cold
+customer or we have a cold product which is presence the customer is new right so
+it's a cold start customer or the product is new it just got launched uh a movie just got released uh you know so
+there's a new product on the market and we don't have enough data on it so it's a cold start right it's not a warm start
+it's I don't have a I had I don't have I don't have a hot start on it so it's the cold start so that's what we mean by
+cold start um so there's not enough data that I can use uh features to do good
+recommendations on I would have to rely on content features to make recommendations I don't have behavioral
+data on it so that's that's cool start okay and then another clarifying
+question uh does k equal is k equals similar uh to something like krk the K
+nearest neighbors algorithm yeah so the candle receiver algorithm is
+uh is yeah I mean you can say that
+the K is just a hyper parameter right so the K can be Phi or ten in that sense it
+is similar K nearest neighbor is like saying find me the K nearest neighbors to uh an image or a data point so here
+um the K you know the way we're getting the top K recommendations is kind of similar because we are scoring different
+products or different movies and once we score them we sort it and we
+take the top five or top top K that top K is kind of the nearest or the most
+similar you can say so in that sense it's kind of the same context but these
+are different algorithms right uh they're not we're not we're not talking about the same exact same algorithm here
+but the K is used in a similar way yeah okay perfect and then uh going back to
+that question about Precision uh this uh Grace is wondering about the threshold
+for precision like how accurate do we expect the recommender system to get
+yeah that's a good one um so you know there is something called the area AUC curve which is like the
+plot between pressure false possible true positive and then you see uh you change the Threshold at which you say
+something uh yeah you know you you want to recommend a product to a user or not
+right so if you change the threshold let's let's say threshold is 0.5 if if
+the score is greater than 0.5 like you know we saw that example where Amy likes arrival because the score is 0.9 so
+maybe the threshold there was Zero if I shift the threshold to 0.5 I would still recommend this uh arrival to Amy but if
+someone else had a score of 0.4 we would not recommend right so the the threshold
+influences the Precision and recall right so the as you change the threshold
+the pressure might increase and the recall drops or if you decrease the threshold oppression uh decreases and
+the recall increases so that's something that's also a design choice so a lot of
+times people optimize for recall or precision right so if you optimize for recall you
+definitely want to get the purchases or movies right but you might make false recommendations
+okay but if you optimize so Precision you're being very very picky on what you recommend but you miss out on a whole
+lot of other things that the user would have liked because you optimized for precision so you uh it's a design choice
+to see where you want to fall and the threshold that you mentioned does play an important role there right so it's
+it's entirely depend on the on the problem that we're looking at or on the specific uh project that you're working
+on right okay and then final question before we move on
+um is Matrix completion the main algorithm to implement recommender systems or are there other common
+algorithms out there yeah so Matrix completion is is very popular for collaborative filtering uh
+but these days the the tutor architecture kind of subsumes Matrix completion it's like a more advanced
+version of that because it also does content-based filtering so we started
+out there so as to explain it but these days mostly you know in many contexts
+people don't just use Matrix completion they would use it as a module or as a
+part of a bigger architecture like the tutor architecture and that would also be part of a bigger architecture that
+we'll be talking in the next segment so it's like these are all different modules that go into a bigger one and
+then you might even expand that out depending on your needs okay perfect and let's save the rest of
+questions for the end and let's go ahead and continue okay so we're gonna getting to the last
+Popular Recommender Systems
+segment of uh of today's talk um so which is uh you know at an
+industry scale right at a billion scale um when we have a lot of products to recommend from
+um how does a recommended system design look like okay so we'll start with the tutor architecture which has a user
+tower for a tower and user product interactions so the good news is that this is a hybrid model it does
+collaborative filtering and content-based filtering it can Surface relevant recommendations it can account
+for diversity once you add a diversity re-ranker it can take care of co-star so this is all the good things about the
+tour architecture but the not so good news is that it doesn't scale even with caching and the reason is you might have
+paywise interactions uh which you cannot cache you can only cash until that point and then you'll still have to go through
+the pairwise and tractions in real time to make a recommendation and incur incur latency right so so for this reason we
+need a multi-stage approach and this is typically what uh the top tech companies use is a multi-stage approach to
+recommender systems so uh I'm using a template here but this template applies
+to many different uh recommendation engines used by top companies right uh
+so this this flavor surface design is used by YouTube um Pinterest uh incidentally uses more
+than one uh like their real-time recommender uses graph recommendations so the you know there's they have more
+than one recommended System model Twitter and Instagram as well so the idea here is to you know you might start
+with billions of candidates but uh kind of filter it out using a very simple
+heuristic or a simple model to thousands and then use a more complicated model to
+reduce thousands of candidates to hundreds and then re-rank it to generate dozens so this is like the funnel that
+you go through from billions to thousands to hundreds to dozens and that's a multi-stage approach so use
+simpler heuristics faster models less accurate models but you know you you
+know they give you good you know reasonable candidates from which you will cherry pick and use more complex
+models in the later stage to cherry pick the ones that are most relevant to the user or meet your criteria right so
+that's the whole idea of this multi-stage uh scalable recommended system design
+so let's look at candidate Generation Um usually a simple heuristic uh maybe
+popularity is one you can you can use popularity filters to filter out some of this you can also use Simple uh
+collaborative filtering like Matrix simulation model like someone asked me to completion I've used it well this is a good place to use it and filter it
+down to thousands right these thousands may not all be very relevant but they
+will be relevant ones in them so you'll have to cherry pick and you know use a more complicated model and then in the
+second stage which is a scoring stage of these you know you've generated thousand candidates filtered billions of
+thousands let's score them for that you might use a two-door model that we just spoke about so now you see two Tower is
+a component of this scalable uh recommended system design right but this
+is not where we stop and one thing I should mention is that here we may not use any video you know
+using the example of videos right we don't we may not use any content features or video features but in the
+second stage we actually look you know tap into a video features store and extract features for videos and then use
+that as input to this model uh which should be a tutorial model for instance and now that we've come down to hundreds
+we would maybe redirect this because we care about diversity like we spoke about diversity we care about fairness we care
+about popularity we care about trending so you see um that many you know most of
+the recommendation Pages like YouTube or Instagram or uh instacart or Tick Tock
+have different categories or Netflix for instance Netflix is a good example have different different channels for
+recommendations right there may be a popular Channel there may be a trending Channel like Netflix has a popular Channel it has a training Channel and
+then it has a genre of your favorite genre so you have different channels so you may want to re-rank to account for
+that right so this suggest that why not break up the re-ranking into different segments so now we have a segment for
+trending now we have a segment for popularity now we have segment for you know personalized to you uh and these
+may be optimized and or re-ranked in different ways so you start with hundreds but you kind of re-rank it based on you want to focus on trending
+or you want to focus on popular or you want to focus on something else right so this is one way to take care of uh you
+know the the multi-channel recommendations right um you know building on top of this we
+might want to move this one step ahead uh in this fashion so instead of
+re-ranking uh instead of taking the hundreds and re-ranking why not optimize for trending early on by not optimized
+for popular videos early on so uh from the total model whatever outputs we get
+we ask the total model to specialize for training or specialize for popular or specialized for something else and this
+way you can get multi-channel recommendations from a single framework right so you start with a big
+multi-stage approach but towards the end you start to Branch out uh for for multi-channel so this is a multi-channel
+scalable design um and then the next uh you know thing to
+think about is real-time recommendations and this is something that's very important uh one example of real-time
+recommendations is in session recommendations right so you are in session uh maybe you you just finished
+watching arrival okay I just finished watching arrival I just finished watching a web series what's the next thing to recommend I'm still in session
+I'm still live right knowing this my recommendations will change right I
+cannot just show the same static recommendations now that I've watched this in session I want to change the
+recommendation so this is session recommendations using this information we change the recommendations that we
+surface right so we may have a different model or a different re-ranker to take care of session recommendations and this
+is again you know this is a very interesting example for movies uh or for uh videos maybe I'm like in a specific
+genre right now maybe I'm looking at Thrillers and I want to keep watching Thrillers right so maybe I want to
+recommend other thriller movies or web series as the next thing to watch in session but when you look at products that's not
+true we look at an example if I've already added serials to my card and I'm in session don't recommend cereals
+recommend something else recommend coffee so depending on the context the in session recommendation model may look
+different for different uh you know different contexts so that's something uh to think about and keep in mind
+um so uh typically companies you know as they start scaling they'll start adding
+different modules depending on the needs depending on the requirements depending on the metrics depending on where the
+revenue is and so so you'll see the design get more and more and more complicated uh
+especially when we get to real-time recommendations it can be even more complicated um and we've even spoken we haven't gone
+into the system design uh aspect of this we have stuck to machine learning design here just to kind of uh not not go too
+much details but you can imagine that also gets more complicated the more complicated the the machine learning design here
+um yeah so I I think I'll just go into some of the the last part of this last
+Evaluating the Design for Recommender Systems
+segment which is evaluating the design so once you have a design for recommended systems how do you evaluate
+it right how do you know you have a good design right okay we have this really fancy design right it has multi-stage
+and everything how do you know it works right so that's where we have to uh come up with offline metrics to Benchmark our
+model or our design on and as we know we care about relevance we care about diversity we care about
+cold start so we'll have metrics for each of these and make sure our model is doing well on each of these right you
+can Benchmark on an offline data set and maybe you have more offline metrics as well and then you have business Matrix
+well offline metrics is something that we we have control on I can control relevance or I can measure relevance but
+I may not be able to measure Revenue until I launch my design right until my recommended system is live I don't
+really know how much revenue it's going to generate so that's the business side of things that's the business metrics so Revenue uh if it's videos view time uh
+click-through rate and if it's products number of products viewed or purchased in in a given session these are some
+business metrics that companies would care about so you can see the offline metrics look a little bit different from the business
+metrics right um for instance if I optimize for diversity I show a variety of products
+or a variety of movies uh to users that doesn't necessarily translate into Revenue right business might care about
+Revenue but you are optimizing for diversity so there could be a gap right it can it can help but it's not a
+guarantee so this is called the offline online Gap we Benchmark on offline data
+sets we test on offline data sets but when you go online we find it's not exactly matching up we're not getting
+the results that we care about so companies also focus on Bridging the offline online gap between the business
+Matrix and of my metrics so how do we Bridge the offline online Gap one is to
+have held out test Set uh that's different from your train validation and test set you have a hello test set
+that's more extensive and Benchmark on it um and you know it might have use cases
+that the model has never seen before and see if you do well on that uh you can do internal testing dog footing before you
+launch your recommended system and obviously you want to do a b testing that's obvious you're on an A B test uh
+you know if you can definitely a B test and make sure that when you actually launch you're going to increase your
+business metrics that you care about but even after launch you will still have to monitor production metrics right
+make sure your model still keeps doing well on uh after launch that there is no
+data drift uh that's impacting your model the model is still doing well so you might want to collect production
+data and then keep doing offline evaluation to make sure your metrics are in a good place so this some of these things can help
+bridge the offline online Gap and make sure that the recommended system that you launched that your design is doing a
+good job um uh you know before launch and after launch
+so uh that's the end of the talk uh in summary we looked at some motivation for
+Summary
+recommended systems um we did a recap of recommender models the
+kinds of collaborative filtering content-based filtering Hybrid models we did a recap on that we looked at some design principles that
+are important for recommended systems and that can that any recommended system you need to think about these design
+principles and make sure you check off at least a few of these boxes uh like relevance diversity Etc
+um for your economic system and be able to measure it and show that you're actually doing well so that's a part of the design as well uh we looked at the
+tutor architecture as a very good starting point and as a module that can be used in a bigger uh scalable
+recommended system design and we looked at a template for that as well and we looked at how we would do benchmarking
+uh an evaluation of our recommended system both offline and online and purchasing Bridging the offline online
+Gap so that's about it thanks everyone and I'll pause for any
+Q&A
+questions thank you so much Karthik so it looks like we're already at the or
+past the hour mark so um you have a couple more minutes where we can try and get through as many questions as
+possible and then um we'll cut off maybe in uh you know
+five to ten ish minutes uh yeah I can stay 10 minutes or more you know depending on yeah right all right so
+um so we got truce has this question uh they're getting started with uh you know
+they're kind of a beginner uh they want to work on a project to build a
+recommender system for travelers and tourists that they can add into their portfolio um and they're curious to know you know
+um how to carry it out uh you know should they work on this project as a team can they do it individually
+um and do you have any recommendations for for deploying the recommender system
+they eventually build uh yeah so I think the first part is
+easy working in a team is always good so if you can work in a teamwork but uh you know you know break down the work so
+you can complement each other and not like you know you know put breaks on each other right
+so that's something to just uh teamwork is always good um and also with teamwork you can
+brainstorm new ideas and you can uh do different things and you can break the work down so it's always good to work in
+teams uh with respect to uh you know starting points and deployment uh there
+are you know I'm assuming this project is for for a personal project or it's a
+it's a Capstone project or is it a company project any thoughts on that
+I believe it's a personal project personal project okay personal project you know uh it's good
+to uh there are ways to do deployment of this um I'm assuming that you want to build a
+web page or something where uh you know a user comes in and asks a question or something and they get recommended some
+products or you know uh I'm assuming that's the context in which you want to do deployment uh that's not too
+complicated uh you know you if you if you have a neural network recommended model you can use Onyx or taught script
+to kind of package it so that it has fast inference and you can work
+uh you know you can work with one of the JavaScript and react Frameworks uh that
+that enable real-time inference on recommended systems so uh there are some examples of that available so you can
+take a look I think um uh next or JS uh there's the if you
+just search for next.js and react for recommended systems you'll get some references on Google and you can follow
+muted all right so um uh how can and this is back to Jorge how
+can how can I do a b testing and I think this is probably a talk a separate Talk
+itself how can I do a b testing um what if they have multiple systems
+running at once yeah that's a good one uh so at companies you know people usually break
+down uh the entire customer base into different segments and make sure any
+given segment only has one A B test running so that's a way to kind of make sure that you're not having conflicting
+things going on so uh typically there is like a ml Ops segment uh or devops
+similops uh team that's devoted to a b testing that makes sure the segmentation
+is going well there's a dashboard for a b testing there's a place where you can launch in B tests and things like that uh on your own
+um it's difficult but but you know usually if you're if you're in a setup
+where you have infrastructure it's it's it's not too complicated to do a B test but uh yeah you have to take care of a
+few things and there's also statistics involved in a bit testing right you want to make sure that the results of a B test are significant statistically
+significant so you want to incorporate statistics as well in your A B test and Report significance yeah so those are
+some things that I can think of yeah perfect and I'm going to ask you one
+more question because I am actually running into a Blocker on my schedule so
+um this is from JC a clarification question uh JC says I assume the same
+user entries are not grouped otherwise you could get cold start if you have one set of customers in your training data
+and the other set of customers in your validation data yeah yeah yeah so we we usually assume
+that what what typically happens is if if you have new customers you have a way
+of dealing with recommendations for them uh and once you collect enough Impressions or data for new customers
+you add it back add them back to the training data set so if a customer is present
+you know your model has seen it then make regular recommendations if not then
+do something else so that's the kind of logic that you would have for cold start or a regular customer right
+but definitely you want to keep piping in if a new customer becomes old because they've been there around for some time
+then add them back to the pool and then retrain so retraining keeps happening for recommended systems you know
+companies usually do it on a daily basis sometimes like Tick Tock would do it on an hourly basis because they have so
+many viral videos coming trending videos coming so you want to keep retraining every hour so there will be a training schedule in which you are able to
+incorporate new users new videos new

@@ -1,0 +1,577 @@
+hello everyone again I'm Karthik Mohan I'm an affiliate professor at University of Washington Seattle where I teach a
+lot of courses on machine learning and data science I'm teaching a course this quarter as well and I think we'll have a
+link for that shared at some point um so today's topic is recommender systems and its design right and I want
+to thank data science Dojo as well for giving me this opportunity to present our recommended systems so really happy
+to be here today so a bit about me um I read my PhD in ECE at University of
+Washington Seattle uh some time back and then I joined Amazon where I go to work on and only detection
+and recommended system so that was my first brush with recommender systems at an industry level
+um then I joined meta and I got to work on a completely different set of problems on in conversational Ai and
+natural language generation and right now I'm uh happily teaching courses on machine learning and you know
+mentoring students and Advising them so pretty excited to be here with all of you and share a bit from my experience
+so today's talk uh we'll kind of break it up into four broad categories uh one
+is Introduction and motivation the second is you know on the types of recommender systems we look at some
+models for recommendations some baseline models and we'll also look at performance metrics and its um uh and
+the design right so uh let's let's Dive Right into motivation and I also want to
+kind of give a teaser that we have a next stock that is part two uh that's probably going to be scheduled in April
+sometime April uh I don't know exactly but we'll share a bit on that towards the end of the stock and probably also a
+little bit later where we're going to extend the talk today and go into the deeper aspects so we're going to look at
+more architectures for recommended systems we're going to do Deep dive on design and we're also going to look at
+recommendations at top Tech um uh in the part two of the stocks
+they'll be in April sometime but for today's talk uh it's going to be an introduction to recommended systems so
+if you're new to recommender systems hopefully this gets you excited and you want to know more you want to learn more and you know I'm happy to chat
+afterwards but you can also look up the resources uh if you've already worked in recommended systems a lot of this
+information is something that you might be familiar with but it's a good recap and hopefully you also find it useful
+okay let's jump into some of the motivation
+Introduction and Motivation
+behind recommended systems so recommender system shows up in many different places one of the classic use
+cases is online shopping right so if I ask you how do you go how do you find
+products that you want to buy when you shop online and you might say a few
+things like you might say I search for the product I just go to the browser I type in what I want to look for maybe
+I'm looking for chocolate and I type in chocolate and I find a product and I might I may or may not like it right the
+second is browse so you just go through different pages let's say you're shopping on Amazon or instacart you're
+just going through different pages and you're like okay I like this maybe I want to add this to cart maybe maybe you're doing bulk shopping you want to
+purchase 10 12 items for your home uh you do weekly shopping you're kind of going through the list so that's browse
+uh there may be some popular categories that the company offers so you might also take a look at that and see oh this
+is popular maybe there is something here that I want that I might like and I want to add to my card so that that's another
+way you can do online shopping right the fourth one is recommendations and
+this is what we're going to focus more on in the stock so recommendations make it easy and it's kind of proactive
+surfacing of products and content that you can consume in a way that's more
+personalized and relevant to you right so um there's advantages to having recommendations delivered to you and
+we'll take a look at that shortly so let's take an example of Amazon
+recommendations right so Amazon recommendations for instance is Carousel based so you go to a page and you're
+looking for some recommendations you'll see these carousels which are basically these horizontal rectangles that have
+represent different things for instance we see here add more to your cart that's one Carousel recommended for you that's
+another Carousel pick up where you left office another carousel right so for instance if you look at pickup
+where you left off you'll find maybe you were shopping earlier and you couldn't finish your
+purchase so now you get some recommendations so that you can actually finish your cart and finish your
+purchase and move on right so this can help you with finishing your purchase and these could be recommendations
+specific to your previous purchase that you didn't complete so it might be specific to that so it can help you
+complete uh byte again is another useful Carousel that we see not just in Amazon but also
+instacart and other shopping places where I have a pattern to purchase
+certain things and this is actually coming from my own shopping list right so I actually purchased these things
+um so when I go to for instance or Amazon I find bite again super useful
+because I've already bought it in the past and I'm likely to buy it again it's more more like weekly shopping and I
+might make a few changes here and there so buy it again is very easy to choose
+from pick from and add to your cart and then check out right
+let's look at another example uh switching from Amazon to a different uh motivation so Netflix
+Netflix recommendations if you go to Netflix we all we all mostly here we all watch
+Netflix at some point or the other weekends you know might also binge watch because the recommendations are so good
+right it's like almost like it understands what you like and so it's easy for you to go from one movie to the
+other one series to the other right so Netflix recommendations are also Carousel based as you can see there's
+like different bars where you can see uh different uh topics or different kinds
+of recommendations so there's for instance here you see popular on Netflix you see trending now and you also see
+futuristic sci-fi so for me futuristic sci-fi is something that I like and I see that's showing up at number three
+right and I might actually go click on it as another example LinkedIn
+recommendations so if you look at LinkedIn recommendations a lot of LinkedIn recommendations are based on
+um your network right so somewhere in your network might have commented on some post and its surfaces in your
+LinkedIn feed and the content might be from someone who's not even in your network but because someone in your
+network commented on it you're able to see this again this is from my feed and you know the topic is something that's
+kind of uh a trend right now chat GPD so I just thought I'll share this example here
+so just to recap the motivation behind recommender systems right why why do
+companies invest in recommended systems why is recommended systems so important because it saves time for the customers
+right imagine you're searching you're browsing you're spending time you're adding things to your cart and it can
+take like 20 minutes 30 minutes if you're doing bulk purchases it's just like you went to a supermarket and you
+want to get some items um but in the supermarket everything's like clearly organized but on web pages
+it's kind of more clunkier so it saves a lot of time for you to make bulk purchase and also shop uh on Amazon or
+you know watch movies on Netflix right and the second advantage of recommended systems is surfaces products that are
+relevant to you so a lot of times you might have popular products popular
+movies but they may not be what you like so surfacing part is relevant is is one
+of the advantages of having a recommender system it's personalized
+so if you go to Netflix your Netflix page is different from my Netflix page right because it's personalized it looks
+very different so and that helps because we all are different and we all have different preferences so it makes sense
+to make things personalized so personalization is a very big advantage of recommended systems and the fourth
+one which we'll touch upon a little bit in this talk but a lot more in the next talk which was coming in April is
+coverage so a company like Amazon or Netflix may have millions of content
+right millions of products for millions of movies and they may want to surface it to customers so that people become
+aware of it and maybe you'll have something there that you like so you want to cover for a lot a lot of
+products and recommended systems can also account for it and help with coverage right
+okay so um I can pause here to see if people have any questions on the content so far
+yeah so uh one person's asking if uh you know about the content will we be
+covering architectures uh comparison of different who is it
+I don't know how to say that r-e-c-s-y-s IX yeah yeah so uh
+so we're going to be comparing different architectures and design deep Dives in the part two which is in April okay so
+today's talk is more higher level yeah sounds good foreign
+person um we'll be also be covering the metrics to evaluate the result of top n
+recommends we're going to do that yes that's all we have for now so we can go
+ahead and continue okay so let's go to the second segment of today's talk types
+Types of Recommender Systems
+of recommended systems right and this is more of a high level broader categorization like if you want to think
+about recommended systems how are you going to start thinking about it so types of recommendations stay
+recommended systems the first ones unpersonalized so you have recommendations but it could be
+recommendations for anyone it's not specific to you so that's unpersonalized recommendations for instance sponsored
+products so you see this on Amazon you might see it on other web pages you might see it on a social media page
+there's some sponsored ads right um so this may or may not be personalized right uh and the same thing
+goes with popular categories so there are some popular categories popular products that people purchase maybe this
+is of interest to you uh doesn't have to be personalized and then comes personalized
+recommendations which is going to be the focus of today's talk and which is where we actually need models and we actually
+need data we actually need to do machine learning to get to personalized recommendations right because it it
+involves it involves understanding behavior and that's something that we get from data so personalized
+recommendation is going to be the focus of the stock sponsored products and popular categories can also be personalized
+right like you might have a popular category and you may want to personalize within it so that people actually look
+at it so personalization can apply to these two as well you can also have a
+separate Carousel that says recommended for you so this is pure personalization right this is like when I see futuristic
+Sci-Fi movies on my Netflix page I'm like yeah that's that's something I would love to go take a look at
+so a few examples from for instance we look at Amazon I go to
+the books uh a category on Amazon and on the page the first thing that I see is
+uh the best books of January best books of 2022 and so on so these are things
+that are popular for 2022 uh actually we're in 2023 but maybe it doesn't come
+out yet because I just checked yesterday or day before yesterday so um best books for 2020. so this is a
+good starting point gives me a good place to start uh if I want to buy a book personalized recommendations top picks
+for you well this is actually in tune the books that I see here see some books on engineering see some books on a book
+on running some books on spirituality uh this is kind of my interest space right
+so this is this makes sense to me this is relevant this is personalized okay
+and then we also talked about popular recommendations that can be personalized so here's an example I go
+to Amazon and I got this Carousel that popped up that said frequently purchased
+in home so this is frequently purchased in home so it's popular may not necessarily be
+relevant to me but what is relevant to me is the category the home category I have made a lot of purchases off late so
+the home category is very relevant to me right and that is something where you combine something that is personalized
+with something that is popular so this is like kind of a mix of the two
+okay so we're going to go more into personalized models so that is part
+three um and this is going to be a big bigger segment of the stock again I'm going to
+pause to see if we had any thoughts or questions on what we covered in part two
+um there is one person if they were wondering if he had other examples um outside of Netflix and Amazon because
+those are always mentioned but I think it was more about the types of recommenders and not necessarily the
+companies doing them but do you have do you know any other um maybe smaller brands that use
+recommenders and use them effectively Pinterest yeah Pinterest uses recommender systems we have Instagram
+recommendations or YouTube recommendations um I mean LinkedIn also I mean I think I
+mentioned LinkedIn so you can almost imagine almost every web page that has some product to sell can personalize and
+recommend Shopify so there's many many brands that do recommendations yeah
+um any other that's it okay great
+cool
+all right so let's go into the third part third segment of this talk this is where we're going to do a little bit of
+Recommendation Models
+a deep dive into some of the models popular models for recommender systems
+and uh understand how they actually work how are they extracting insights from
+data how are how are we building models for recommended systems and how are these models helping us make these
+recommendations so we'll kind of do a little bit of a deep dive so one of the first models we'll take a
+look at is something called collaborative filtering the idea is that there's a collaboration going on between
+different users in the sense that if if you like uh for instance if you're
+looking at Movies if you like comedy and I like comedy maybe we can exchange movies that we like and watch those so
+that's the collaboration collaborative aspect so collaborative filtering models are models that use data based on this
+user similarity to make recommendations you can also say this is a behavioral
+based approach because you're looking at use of behavior or customer behavior on shopping sites to help us understand
+what recommendations would be relevant the second is second broad categories
+content-based filtering so content-based filtering is if you shop for a particular product
+can you make other recommendations based on that right so just purely based on content we're not looking at anyone else
+we're just looking at what did you purchase and here are some other products that are similar to what you purchased so that would be a
+content-based filtering model and then you have Hybrid models that can combine the two and a lot of popular
+models in the industry actually combine these two approaches and are much more sophisticated than we will talk about in
+this talk but in the next talk we will actually go into some of the architectures and design uh because the
+models we discuss here in today's talk could be one part of a larger
+architecture of a recommended system right all right so let's start with
+collaborative filtering so another classic motivations and examples that is given for collaborative
+filtering is a Netflix million dollar price so Netflix had a competition uh some of us might be familiar with it
+it's called The Million Dollar prize competition where they offer million dollars for anyone who could crack uh or
+be able to make good predictions for different movies that are watched by different users so not every user has
+watched every movie not every movie has been watched by every user so there's going to be missing ratings can you fill
+in the missing ratings can you say this is really good for this user and this is not something I would recommend can you
+do that consistently and can you do can you do that with high accuracy that was the goal of the Netflix million dollar
+price and you can see here there's one team called pragmatic chaos that actually won the price and they also had
+a leaderboard um where people would make submissions and you can see the best score that you
+see here is based on this metric called rmsc root mean square error um this is really useful when you have
+ratings but uh there's also many other metrics that we're going to cover in the stock
+which are helpful for evaluating recommended systems right
+so pragmatic Theory um I I took a look at the paper and they use a combination of models and one of
+the models is based on collaborative filtering so let's take a look at collaborative filtering
+foreign let's say there are five users there's
+Rishi raghubir Karthik that's me Roshan and Amy okay and let's say there are
+um five movies Avatar arrival When Harry Met Sally Before Sunrise and minions
+so like I said not every user has watched every movie and not every movie is watched by every user if you look at
+these five movies the first two fall in the category of Science Fiction in a
+futuristic sci-fi the second to fall in the category of romance and the last one is probably animation slash comedy right
+so assume that we have some ratings from these users so it might look something like this a thumbs up is I like this
+movie it comes down as I don't like this movie for instance if you look at Amy Amy likes arrival but she doesn't like
+minions if you look at Rishi Rishi likes arrival and he also likes minions
+but if you look at this Matrix there are some cells that are empty so those are
+the missing readings those are the question marks we don't know what those are and hopefully the collaborative filtering model can help
+fill these missing ratings right so let's take an example so the question
+is does Karthik like arrival okay so that's the purple question mark so what
+what the model might do is it might say well you know Karthik is similar to
+Rishi in terms of preferences because both like Avatar and both don't like
+When Harry Met Sally so there are some similarities so maybe I can fill in the rating from Rishi to Karthik and if I
+did that the model would say Karthik would like arrivals so maybe you should recommend arrival to Karthik
+and we can do the same for let's say I haven't watched I don't know if I would like Before Sunrise and here I'm going
+to see that I'm similar to Rishi so I'm going to fill it in and say maybe I don't like it and you can do the same
+thing um let's take another example so let's say we have does Roshan like the movie
+Minions um and then Roshan seems to be sooner raghavir so
+I'm going to fill in the rating from Roshan right so that will give me a like for minions
+and I can do the same for every uh user and movie combination and when I do all
+of this I'm at the end of the day I'm able to fill this Matrix um the key thing is we have really
+oversimplified lists so the model is not just looking at one user it might be
+looking at many users who are similar to me and use their combination of their preferences to help
+me inform what whether I like or not like a movie right but to simplify you
+can just think of one user but you can see that it can be more complicated uh you can draw information from many users
+to fill in the information so as you can see we took a matrix and
+we started completing it and that's why the model or the problem space here is
+called Matrix completion you have a matrix of ratings but it's incomplete
+and you want to complete this Matrix and that's what's called The Matrix completion problem okay so for instance we have a matrix
+here in blue and this is this has missing ratings
+right um The Matrix completion model the one of
+the most Baseline models is going to factor this into users Matrix and a
+movies Matrix right so this user factors and movie factors and
+when you have a missing rating you can look up the user you can look up the movie and you can take a DOT product and
+that gives you a rating okay and this is what a machine learning algorithm would do is from the ratings
+that I already know exist can I learn these user factors and can I learn these movie factors so this
+red rectangle and the green rectangle is completely learned from data by the model so you can make predictions for
+movies that don't have ratings
+so let's take an example let's say Amy is this yellow line in the blue Matrix
+and there's also a corresponding line in the red rectangular Matrix so Amy might
+have a missing rating for arrival so how do I know if Amy likes arrival
+well Amy in in this factorization Amy has a factor use a factor so it's it's a
+vector of certain Dimension and arrival the movie has a certain factor it's the vector of a certain Dimension but these
+factors reside in the same latent space so you can actually make comparisons so you might guess what would be the
+similarity that can help you compare Amy with arrival the similarity would be genres right so they may share some
+genres Amy might like certain genres and arrival might be composed of certain genres if these two match then you can
+say that Amy likes arrival right or if they don't you say Amy doesn't like arrival
+but we're going to spend a little bit more time on this in a bit to understand how these factors are learned and how
+what do they exactly represent but for illustration we take any Factor
+the arrivals Factor we take a DOT product and you get a score of let's say
+0.9 you pass it through uh let's say a probability function maybe sigmoid and
+you get a score of 0.9 and you say 0.9 is a high probability so with high probability I'm going to recommend the
+movie arrival to Amy so this is the essence of Matrix factorization this is the essence also of many deep learning
+approaches are based on taking dot products right
+all right so collaborative filtering is very useful and we cast collaborative
+filtering as a matrix completion model we looked at how a model might do Matrix completion learning the use of factors
+and moving factors and how it actually makes predictions now here's a question
+the model so far has looked at a certain set of movies what if there's a new
+movie or what what if there is a movie that shows up in a database that hasn't showed up before I've never seen this
+movie so I don't have a movie factor for it for instance if I look at Men in Black
+I may not have a a movie factor for it because it's not in my database
+how would I make predictions for Men in Black how can I say that users may or may not
+like it in this case right so this is an example of what we call a cold start problem
+so a cold start problem is where you're seeing a movie or a product or you are
+seeing a user for the first time you've never seen that before and you still want to make recommendations how do you
+do that in that scenario so collaborative filtering as you've seen so far might fail in the scenario right
+so you may have to use a different approach and this is where we have content-based
+filtering so we looked at collaborative filtering the second approach for a personalized recommendations is content-based filtering and
+content-based filtering can help address the cold start problem what if we have a new movie for which you don't have ratings you've never no one's seen it no
+no one's watched it or your model hasn't seen it right how do you make how do you
+decide uh how do you decide the recommendations for it so let's take an example let's say I'm I
+I haven't watched Men In Black but I have watched arrival would I watch Men In Black well then
+based on the content filtering model you would say arrival is similar to Men In Black in terms of content if you look at
+the description you look at the genre you look at the tags associated with these movies they kind of match up right
+so I'm looking at some kind of a match a fuzzy match and then based on the fuzzy match I say well I think we should
+recommend Men In Black to Karthik right even though Men In Black was never in my scene database
+okay so content-based filtering is based on
+learning embeddings right so what are embeddings um
+the idea of embeddings is can we leverage content or metadata or both to
+embed movies or embed products in a low dimensional space right so let's take an example so maybe
+arrival here we are embedding in two Dimensions just for for illustration but in
+practice you embed in even more Dimensions so maybe I get give a vector the blue Vector for arrival
+and Men In Black is similar to arrivals so my emitting model would actually
+Place men in Black's Vector the green Vector close to the blue vector and then you have let's say When Harry
+Met Sally uh and that's more of romance and that's kind of orthogonal to uh
+Sci-Fi movies so you might place it in a different space different part of the two-dimensional space and that's the
+pink vector and then you might have minions Again comedy that's an another orthogonal dimensional so you might put
+it in a different space in the two-dimensional representation so this is how an embedding model let's say in
+here in two Dimensions is able to take different movies and place it based on similarity so when you actually take a
+DOT product movies that are close to each other will have a higher doctor movies that are far away will have a lower dot product and
+that is how you're able to differentiate or find similar movies or similar users
+right and this concept uh of embeddings extends to users as well right so we are
+only looking at movies here you can also put in users and movies in the same space which is what we did earlier in in
+The Matrix factorization model we were able to put the user in me and the movie
+arrival in the same representation so we can actually make comparisons
+foreign so how are embeddings learned this is a more General principle there are many
+many techniques to learn embeddings and it has gotten more and more sophisticated over the years but we're
+just covering some of the basics here so uh for let's take a take the example of movies
+um we can still use behavioral data to inform us along with content data to
+inform us on what the embeddings should be so people who watch arrival are likely to watch Men In Black right or
+likely to watch Avatar and hence also Men In Black so if I use this kind of Behavioral data and I also use content
+uh as a input for the model I can combine these two pieces of information to learn embeddings right
+so maybe arrival is people have watched arrival have also likely to watch Avatar
+and so are likely to watch Men In Black and then you know people who watch arrival may
+not watch uh When Harry Met Sally so you know what you can put it in a different space so this is kind of how you would
+learn from both Behavior and the content to get the embeddings right and as we
+said it doesn't have to be in two Dimensions the embeddings typically are not in two Dimensions they're in a much
+more higher dimensional space it's not like in millions hundreds or thousands so your typical embedding dimensions are
+like 128 or 256 or 1024 but not more than that so we don't see embedding
+Dimensions more than that and you can make dot products and comparisons based on uh these Dimensions to understand and
+make recommendations so what do these embeddings represent right this is something this is a
+question we asked earlier and we'll address it here uh in a bit um so I have embeddings and I don't know
+what these Vector represents right this is something the model gives you it says here's a 120 dimensional Vector it has
+all these floats all these numbers and you take a look at it and you're like what does it really mean right so
+because we don't necessarily know what it means we call it call these Dimensions latent Dimensions or hidden
+Dimensions you don't know what they are but they do mean something if you were to inspect it and interpret it you might
+find some meaning for instance I might I might inspect this and say oh you know the First Dimension uh it is connected
+to Comedy the second dimension is connected to the Thriller the third dimension is again connected to Comedy and so I can make these inferences once
+I inspect these Dimensions but to begin with they are latent okay but they do make sense and they do
+represent something but it's not something that you decide beforehand it is something that you inspect after the
+model has learned these dimensions so you can say embeddings in a sense are
+a concise way to capture the most important pieces of information of
+movies or products that can help you differentiate between them and also make recommendations so it's a concise
+representation with all the information required right so you can say embeddings kind of capture that idea
+so uh more examples of content-based filtering um so this is again from my own uh
+Amazon page so if I have uh read this book what make or I like this book what makes us human then I might get
+recommendations that it look like this so what makes us human is kind of uh a futuristic look at where Ai and human
+how to you know how do these things compare and so I see a lot of recommendations on AI uh show up and it
+makes a lot of sense and you can see this is showing up in sponsored but even though it's in sponsored the
+recommendation is personalized so that that that makes sense right
+um another example from LinkedIn is and this is an interesting example that I want to touch upon if you look at
+our LinkedIn feed a lot of our LinkedIn feed is based on people that you follow for instance here this is the someone I
+follow and I see they've posted something on CNN um and deep learning and this is something I might find interesting and
+also I see posts I see I see posts in my feed uh on
+someone in my network who has commented on a post who is not in my network uh so
+a lot of these LinkedIn recommendations that are coming on my feed look like collaborative filtering because there's
+a collaboration among users and these users are people on in your network in my network so that's the collaboration
+collaborative aspect that we see here in terms of recommendations right so you can say this is an instance of collaborative filtering
+but it can also be content filtering because maybe you have 500 or 1000 or
+maybe 10 000 people in your network how do you order the feed or the posts
+that are coming out of these 10 000 people and that can be done based on content which is you know things that
+you like to read about or like to see right maybe I like to read about machine learning maybe I like to read about data
+science so kind of filter more of those and maybe you can also look at Behavior
+like maybe I like certain kinds of posts and that also tells LinkedIn on what I might like and then filter it based on
+that so you can see a combination of these two show up here
+so the third model is connected to this which is a hybrid model that combines collaborative filtering and
+content-based filtering so collaborative filtering is great because it uses behavior and a lot of recommended system
+models are based on collaborative filtering because behavioral data is is available but it may not address cold
+start problem it may not help us search byproducts so that's where content-based filtering comes in so why not combine
+the two and that is what Hybrid models do they're able to combine collaborative filtering with a content-based filtering
+so one of the popular architectures for Hybrid models is a true Tower architecture here's here's an example
+that I've taken for news recommendations so if you want to recommend news articles to users how would you do that
+um so here the idf2 to our model is it's a deep learning model is you build deep
+representations for a user you build deep presentations for news articles and then at the very end you can kind of
+take a DOT product or you do some kind of a ranking and evaluate to see if you
+would recommend this news article to a user or not so the concept of embeddings show up again in this place but you also
+have embeddings for users and embeddings for news articles you're you're using the content the
+metadata of the newest model to build the embeddings for news articles which we didn't do in the example we looked
+earlier on collaborative filtering we didn't use any content data but here this is a hybrid model that's using
+content information in addition to collaborative filtering and it's building deep representations that can
+help you make predictions so this is one of the very popular uh two Tower architecture gets used in a lot of
+places in the industry also is very useful for inference you can do faster inference with Twitter or model versus
+let's say a different architecture like multiplayer perceptron um
+all right um I'll quickly pause here since you've covered a lot to see if there's any
+quick questions before we go into performance metrics yeah we've got a few questions like you
+predicted so uh let's try and go through a few of them
+um so is the practice to build separate recommender systems for each category
+like recently watched relevant items Etc or is it one Mastiff one massive system
+and then binning is based on the categories so that's a very good question
+um based on my industry experience and having spoken to people and having worked on it I can say that it's both so
+if you're a new team and you're starting out uh with your own recommendations a project in your company you might just
+start out with one Carousel I just want to get a good starting point and you might just build that but a more mature
+team has already worked on different things have already seen gains from different kinds of carousels you cannot
+say let's not have bite again let's just have this recommended system because bite again is super useful uh you may
+want to have multiple carousels in that in that context where you have more
+mature teams and you've already spent enough time a team may want to do whole page optimization so you look at all
+these carousels in one go and see how to reorder them so not just within a carousel but across carousels reorder
+them and see which one gives you a good gain on metrics and metrics is something
+that we're going to cover in the next segment but things like Revenue new sales
+you know and also modeling metrics you want to look at Benchmark it and see if reordering can help so again depends on
+where the team is in terms of building recommended systems yeah okay and how do
+we know what a factor really represents
+yes so what you can how do you know what a factor really I represents it's a good question so this is uh this is also
+connected to what we call interpretability and machine learning right we know if you spend a little bit
+time with deep learning you will you'll know that deep learning models are not very interpretable so it's very important to understand
+how to how do you explain these factors to people that's a very good question a very important question so in this case
+it's not so complicated what I would say is let's say you want to look at Dimension two you have 128 dimensions
+and you want to look at Dimension two and see does this represent comedy does it represent comedy plus Thriller does it represent a combination of things so
+what I'll see is when does this Factor get activated for which movie does this Factor get activated so if I and I know
+the genres of the movies right so I can map the activations to the genres and you know get a list of genres that
+activate this factor and that tells me that this Dimension represents these
+genres right so that's how you just kind of do a post analysis to understand the activations
+okay and then I don't have any context behind this question so um and I think this person's on a live
+stream so if they provide context um would love to have it but uh the question is what about cosine similarity
+recommendation systems yeah yeah yeah totally I mean we talked about dot product you can replace dot product with
+cosine similarity so the idea isn't sort of just a DOT product between two vectors you can also normalize the
+vectors when you normalize it you get cosine similarity and an intuition behind it is the angle so we spoke about
+you know arrival the movie arrival and the movie um uh Avatar or Men In Black being close
+to each other so the angle there is small that is cosine similarity so the angle is small your cosine similarity is
+higher if you see Harry and Sally that's here and then arrival is here the angle is 90 degrees or it's it's really huge
+that means there are orthogonal they're not connected so the cosine is going to be smaller for that so yes it's it's a
+very good metric that also gets used in recommended systems okay and then I think this will be be our last question
+before we just move on what defines each of these recommender groups in terms of math
+yeah all of them are so these days all of them can be cast as a deep learning
+model right and it's most of them are feed forward neural networks and the math math that
+comes behind it so if you're familiar with feed for neural networks you can take a look at you know what the math is there but you have some linear layers
+you have some nonlinear activation linear layer and only inactivation but it can also be more uh sophisticated
+depending on the starting point if your content data for instance for
+content-based filtering content is natural language so that's when we get into natural language processing and the
+models that come out of there so you might use a Transformer model to extract embeddings from content-based for
+Content based uh filtering um so you can mix and match right so whatever is best for that so what I'm
+trying to get at here is the input type data type determines the kind of model
+that you will actually use to build these weddings and to build these architectures we will do a deep dive on
+this in the part two so but it's a good uh good I just want to quickly mention that yeah okay and then I think we
+should wait till the end to answer the rest just to make sure we have time to finish the presentation yeah yeah
+okay so let's uh let's get to the last segment of today's talk which is on performance metrics and uh it's you know
+Performance Metrics and its Designs
+an evaluation and design so this is like super important part of any machine learning pipeline right you can apply
+all the fancy models uh to your data set and get you know say Hey you know I try
+them best I try Transformer but if you're not able to Benchmark it with the right metrics then you may not be
+capturing things effectively and you may have issues when you actually push things to production so there's this
+online offline gap which we'll also talk about in a bit so let's look at some performance metrics so uh I think I'll
+do a quick recap here as well maybe take a minute so so far what have you looked at um we looked at widget or Carousel based
+Baseline recommendations like but again complete your order popular products and
+then we looked at machine learning approaches to recommendations which is personalization um so if you have cold start items for
+instance you would do content-based filtering if you have behavioral data you know who is who's viewing what and
+you know if if customers viewed this product are they also viewing this product if you watch this movie you also watched with this movie so using all of
+that data you can have a collaborative filtering model and in practice people have a combination because you have a
+cold start and you also have regular uh predictions to make so you combine them into a hybrid model okay
+so that was a quick one minute recap of what we looked at um so let's dive into some of the
+performance metrics and design so uh here I would say that we we kind of look
+at two or three broad categories one is the modeling metrics uh there is other design considerations and metrics that
+come out of that and there is business metrics so these three have to kind of somehow sync together for you to make
+good evaluations for recommendations why why can't we just look at business metrics you know you can ask that question at the end of the day the
+bottom line for a business is revenue sales customer growth so why not just optimize for it well for the machine
+learning model these are really abstract it's hard to translate uh you know some
+factors here into a revenue there right so you can't go from a factor here to revenue there so that's why we have
+offline or modeling metrics to help us know if you're doing we're on the right track and hopefully that translates into
+good business metrics hopefully that translates into a better a bump on your
+revenue or a bump on sales right um so we have to look at all these different metrics for that reason
+so let's take a look at some modeling metrics next so I'm going to focus heavily on
+relevance metrics because relevance is what the core of personalization this
+product is relevant to me this is something I would like to buy this is a movie I would like to watch so that is relevance right
+um there could be other metrics too which we'll cover in the design part uh that come up next but this is this is
+one of the most important metrics to look at so some of the metrics we look at today is precision recall uh
+Precision at K and our expression at K so this segment is going to get a little bit technical a little bit involved so
+if you're watching just kind of maybe pay a little bit of attention as we'll be quickly going through these and
+um hopefully it's intuitive so let's take a look at an example so let's say there are purchases I purchased some
+items uh maybe on instacart or Amazon um and these are my most recent
+purchases so I see like Vitamin Water I've kind of purchased like different varieties of Vitamin Water I have a
+clean cleaning product and I have a paper towel okay um let's say the model hasn't seen these
+purchases and it wants to predict these purchase right so this is kind of held out you've not seen it then we want to
+see if you can match these purchases because if you are matching then you're making good recommendations right so
+maybe let's look at the top six recommendations from uh the recommendations model so maybe you see
+Vitamin Water a Ziploc bag a cereal Vitamin Water a cleaning product and I
+don't know what the sixth one is I can't see it but there's a sixth product uh so you have six products here okay so what
+does precision say Precision says of all the products that you recommended how
+many did you get it right okay so we're looking at the bottom row of the recommendations row so here I am
+highlighting the ones that I got right in purple or pink
+um and you see one four five six matches up with the purchase two and three don't match up because they don't they're not
+part of the purchases so that tells me that of six products that I recommended I got four right so that is exactly what
+the question is 4 over 6.67 let's look at recall now it might turn out that I just keep
+recommending vitamin water all the time and vitamin water is part of the purchase so my question will be one but
+recall ensures that you also cover for the variety not just recommend the same thing or you know again and again so uh
+recall in this case is of all the purchases that were made how
+many did the model get right so this is the flipping flipping into the purchases right so the denominator is Phi and I
+got four of them right so the recall is four over five which is 0.8 so you want recall impression to be high the highest
+they can be is one the lowest they can be a zero right foreign
+recommendations we kind of modify recall impression to be like pressure at K right so K can be four or five or six
+why because customers like you go to you go to Netflix page or you go to Amazon
+you're going to look at the first file that I displayed you're not going to keep looking at the top 50 right so the
+first five that I displayed hopefully they are relevant then I am interested then I spend time then I actually go
+purchase so Precision at K uh the K is important so let's say we're looking
+impression at four um as you can see the purple ones are one and four that I got right so
+um the pressure net four is two over four of the four products I recommended which is in the top four two of them I
+have actually purchased so my question at 4 is 0.5 notice the pressure not
+impression at 4 is lower than Precision right then there's something called average
+question at four this is a key distinction that I want to make here is um which is where we're getting into
+ranking metrics so here average question at 4 is look at the positions where you
+got um the recommendations right and average the precisions at those points so here
+we got it right at a question at one four so I'm going to average question at one and pressing at four and I'm going
+to divide by four so as you'll see the average person F4 is able to capture
+the ordering of the recommendations and not just what you recommended and the ordering also matters right so the
+ranking matters so let's look at what average profession at 4 is here um average position so that's average
+operation at one and pressure at four suppression at one is one and percent four as we just computed is two over
+four the average of that is 0.375 so now you see average person at four has even
+gone down as compared to pressure for its 0.375 okay here's a question what if I take
+products two and three and push them to the front so that means my top recommendations are not relevant because
+the top recommendations are Vitamin Water right so they're not relevant so if I did that
+uh yeah so as you can see one and two are not relevant three and four are relevant will average person at 4 change
+the answer is yes because now we're looking at one over three for Krishna at
+three and two over four preparation at four and averaging and you get point to one so point one is less than 0.35 which
+we saw earlier so average person at 4 or at K is able to not just capture if
+you're getting recommendations right but also the ranking of it so ranking is also captured in this metric
+yeah great so uh there are other metrics that
+can also be used like ndcg and Main recall right uh reciprocal rank mean
+let's book a rank but average pressure net four is a very good metric as well uh that combines recommendation uh
+performance and also rankings so you will typically see a combination of average depression at K you'll see
+recall and position combine it to an F1 score and then you report this on your
+models and see if they're doing well or not right so uh maybe a couple of will just
+take maybe three four minutes more um Nathan how much time do we have
+um I mean technically we can go until you're done but I think it more depends on your schedule um uh if you have time to go a little
+over the 60 Minute Mark uh we we definitely can yeah yeah I I think I'll probably go until uh
+the 60 Minute Mark but I can stay back for questions afterwards for sure uh so
+we don't have too much material left but um we'll we'll take five minutes sounds good okay so let's look at some design
+considerations right so we looked at relevance which is the first box on in here so we look at metrics for it
+similarly you have other things that you care about for instance diversity don't just recommend the same product to me
+show me something else so that is diversity cover cover for the space of products that you can actually recommend
+um then there's freshness or recency uh this is very relevant for uh items like
+fashion so let's say you're looking at uh purchasing some items in fashion what was fashionable one year back is no
+longer relevant today so fashion recommendations uh require freshness Tick Tock videos require freshness right
+if people videos keep getting viral so you have to catch up with it the models have to be very very fresh they have to
+recommend things that are recent so that they can you know surface those videos
+um fairness are users being recommended things in the same way or some users are being
+recommended better than the others so are products equally relevant to different diverse group of users or not
+and the same thing with products are different categories of products getting
+the same kinds of recommendations or some of them are being ignored some of them are being left out so this is
+fairness and people also take a look at this in design consideration and also latency
+latency a lot of this is a this is a very important topic and we may cover in
+depth in the next talk but latency is where when you actually go to make predictions or you're doing model
+serving how much time does it take to actually surface recommendations if you've already cached recommendations
+you don't have to worry about it it's already in the cache but sometimes for instance the content content-based filtering you might see a new product
+and you have to generate recommendations on the Fly and that might actually incur latency so you might have latency
+constraints that can determine how you want to design your model uh there's any architecture for your
+recommender system so uh these are some broad design considerations and I'm just
+covering it at a high level we'll we'll probably go into this in the next talk um I just want to touch on diversity uh
+going back to content-based filtering let's say there are three products Fiber One Cheerios and Gevalia two of them are
+cereals one of them is coffee I added Fiber One to the cart you can use cosine similarity for
+diversity so that is because I've already added serials I don't want to add cereals again let's pick something
+else so instead of picking Cheerios I'll pick give Alia so I can use embeddings
+to not just find similar products I can also use it to find diverse products because I want to cover for diversity as
+well so this is a way where you can change the models uh to address different design considerations or you
+might have a relevance model and a diversity model so you can have multiple models that address different design considerations
+okay um last but not least business metrics um
+like you might have Revenue number of products purchased number of subscriptions and customer growth uh but
+there is there's a gap as we said there's a gap between your offline modeling your Precision at k your Rick
+Wall these are all not business metrics right but these are what you're using to Benchmark your model but then when you
+launch a recommended system there's going to be some gap between what you think how you think your model is
+performing and how it actually performs so how do you bridge this Gap well you can do held out offline testing you can
+have a large data set that a model has never looked at and hopefully it has some new kind of products and maybe that
+kind of throws the model off and you can use that feedback to improve on the model uh internal testing dog coding this is
+like staple Diet before you release a recommender system or make a change on a carousel on a page you want to test it
+internally and see that people are saying it makes sense it is actually helping me so before you go out and then
+the last one but not the least is a very important one is a b testing you simultaneously send out different
+versions of uh pages to different users at random and if there is a bump in your
+change as compared to the status quo then you can say your change is actually helping your business metrics and so the
+a b testing is indicating that you must launch the product or launch the recommended system
+um so this is these are some things that can help bridge the offline online Gap and there is more uh that can be done
+okay so the next talk uh as I said in the beginning of the stock
+will be a deep dive into some of the things that we already covered so for instance the design uh we'll do a deep
+dive we'll look at fairness we'll look at diversity we'll look at latency we look at freshness uh architectures so
+collaborative filtering and content-based filtering are models but they fit into a larger scheme a larger
+design and how what are some different popular designs we looked at Two Towers so that's one of them but does many more
+um and then recommendations are top Tech so how does pen trust do recommendations how does YouTube do recommendations how does Twitter do recommendations we look
+at some of the publicly available design architectures and do Deep dive on that so it is exactly one so 60 Minutes
+um I will stop here on the dot so we have a couple questions and we'll
+see if more uh flow through um in most of these questions date back
+to uh section three so um first one is the collaborative filtering model you demonstrated does it
+also use embeddings for the movies yeah it uses embeddings uh collaborative
+filtering models use embeddings based on user Behavior they don't necessarily use
+it based on content but yeah the if you look at the factors that we discussed the factors in embedding you have a user
+embedding you have a movie embedding so that's totally the idea there as well okay and then
+um what's the reason behind the embeddings range embeddings range yes
+Uh Oh you mean the dimension embeddings range sorry I didn't get the question so yeah
+if if you ask this question I think you're also on one of our live streams um if you can give us some context
+behind the embeddings range or maybe somebody in the chat knows um that would be helpful but we'll uh
+skip it for now and maybe come back to it um uh okay so what are the training
+criteria when building two Tower models yeah so total models can be uh you know
+you know you can do it as a binary classification model you can also have ranking loss uh so you can have cross
+cross entropy in your loss function uh you can also have a ranking loss sitting
+on top of two dollar model but typically cross entropy is used because you say uh does this user like this product they
+don't like this product so there's a binary setup there so you might use binary cross entropy uh that fits within
+uh so that's a loss function right when it cross entropy loss motion
+um but you can also use ranking loss uh once you have some rankings maybe you can do a sparewise line ranking loss and
+uh we'll talk about it but that might be a later stage in the beginning you might actually just do binary classification
+okay sounds good that's all the questions we had um unless we get some context behind the embeddings range
+before we close out here um uh I'm sure enough information so you
+cannot do two dimensions three dimensions or ten Dimensions you need to have dimensions and into you can also
+look at the application for instance uh if you're looking at the movie recommendations setup the number of
+genres don't go in millions right they don't go in thousands they might be in hundreds so kind of reflective of that
+so you it's kind of like how many genres do you have and how many combinations you might have maybe in a few hundreds
+so that is one have enough Dimension so you can capture the underlying uh
+interpretation of it the second is probably latency if you look at some of these models right the like Transformer
+models for instance you might have a big Transformer or a smaller Transformer linear Transformer uh latency might play
+a role um you know training time I play a role and so people have people look at how to
+have a more concise representation while not compromising on performance and they might end up at a sweet spot okay 128 is
+probably too low maybe let's do 512 and 1024 increases latency so let's settle for that so it might be based on these
+considerations performance and latency okay perfect sounds good and I know we
+have a GitHub link to share with anyone do you want to talk about that at all yeah actually I just uh I'm going to
+point you guys to the course I'm teaching this uh
+uh this quarter in the University but
+um uh yeah so feel free to take a look at this and there's a lot of resources on it's it's Advanced introduction of
+machine learning uh course I've also taught a course on recommended systems but uh yeah I'll probably reference that
+maybe later later on um yeah that's it perfect sounds good
+well thank you so much for being here with us Karthik and thank you everyone for joining uh there will be a part two
+uh for this uh this webinar maybe we'll call it a series I don't know we've never done a part two before I don't
+think so uh uh and that will be April 12th we will send out an email about it
+um we'll try to send it out with the recording as well so that you have it so just keep your eyes peeled for it uh
+karthikian thank you so much for being here hope you have a good rest of your day thank you so much Nathan thank you so much Fatima and everyone Ramen

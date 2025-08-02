@@ -1,0 +1,800 @@
+[Music] so i'm just going to start by welcoming
+jill um jill very grateful for you to take the time to do this i'm really excited about this for those
+who don't know joe you'll get to meet her throughout the session she's a data scientist at shopify
+she tackles a lot of interesting data problems and she works on the international team
+outside of her work uh she spends her time participating in datathons um for those who are unfamiliar with
+datathons they're hackathons for data scientists and they're really fun often taking place over the weekend and
+people stay up all night doing them they're a good time uh she's also running events for pie
+ladies and pi day to toronto uh and she plays tennis when it's warm enough to go outside
+pie ladies is very very interesting maybe joe you can um include the link for pie ladies and
+pi data toronto it's uh those are two great uh local events and um they do some
+events throughout the year too so that'd be awesome if people could join that um as well so anyways i'll let you um
+i'll let you kick things off joe feel free those two post questions in the chat and i'll
+be here as well but i'm just going to give you the co-hosting duties oh maybe i don't
+need to i think you're good and um yeah we'll we'll get started thank you thanks for the intro dave hi everyone um
+so yeah like dave said my name is jill um i uh i'm also a co
+organizer for pilots toronto i just posted the link there so if any of you are interested in
+attending community events that involve all things python it's open to people of all genders we
+haven't had too many events happening during covid but we hope to plan a couple of virtual ones
+soon so it would be great for more people to join in on that um
+but anyways uh that's about enough about me um today we're going to be talking about
+how to build a recommender system from scratch and so i can't
+see anyone on the screen right now but i'm just wondering if anyone here has experience with
+recommender systems and has tried building one even a small one um in the past
+you can also just post in the chat if that's easier
+cool is anyone familiar with the concept of
+collaborative filtering or content-based filtering
+great okay so some have some some are somewhat familiar
+they are familiar um so for those of you who aren't familiar
+we're gonna learn about what these concepts are and we're also gonna be building and implementing them using python so
+i will just share my screen i have a bit of a presentation to show first and then we'll get straight into
+the tutorial um but actually maybe before i start presenting i'll just share this link with you
+on this repo um one second
+so can you see my screen
+okay perfect uh so this repo has all of the content for our workshop
+um there are two notebooks so there's a tutorial workbook and a tutorial walkthrough this
+walkthrough is what we're gonna be going over so it's like a fill in the blank type of thing
+um and you can either run this locally on your machine using jupyter notebooks
+if you don't have this installed or you don't have the notebook environment on your laptop what
+you can do is use google collab so all you need for this is a gmail account and what you can do
+is just duplicate this notebook but i'll walk through this after my presentation just wanted to
+like have this link open here and available so that you can slowly get ready for our
+walkthrough um but in the meantime let me just get my slides ready cool
+so the movie lens recommender system from scratch
+as some of you are probably already aware recommenders are everywhere amazon netflix linkedin in a world with
+so many options we recommended things every day from what pair of jeans to buy to what
+news article to read to what job we should apply to or even who to who like we should go on a date
+with um recommenders are also super hot a super hot topic in e-commerce
+um but back in the day when e-commerce didn't exist things were sold exclusively in brick
+and mortar stores so a store's inventory was limited to the space of the store and
+products that didn't sell well became unprof unprofitable so the logical choice was to sell the
+most popular mainstream products but once e-commerce came along it
+changed the way we sold things we now have an unlimited inventory which means that niche products
+that were previously neglected in stores are now easily accessible online
+and if you read the book the long tail you'll learn that niche products generate a surprisingly huge amount of
+revenue in online retail in the book in the book the long tail chris anderson
+writes a physical store cannot be reconfigured on the fly to cater to each customer
+based on his or her particular interests the beauty of an online store though is
+that it can having a massive selection of offerings doesn't necessarily mean that users will
+buy more stuff though so in the year 2000 there was a study conducted at a supermarket tasting booth
+one booth had six samples of jam and the other booth had 24.
+the booth with more samples attracted more customers it generated more initial interest but
+interestingly the booth with fewer samples so only six jams um had a much higher conversion
+rate while the booths with what while the booth with only 24 samples had a low conversion rates only three
+percent so um of the customers that went to this the booth with fewer samples
+they were more likely to buy a sample of jam and this finding basically
+um shows that having a wide variety of options may seem appealing to customers but it's
+been shown to reduce their motivation to later on purchase a product and sometimes this is known as like
+choice paralysis in the book paradox of choice barry schwartz talks about how having too many
+options can be too stressful and this is why recommenders are important and this is what why
+so many e-commerce platforms and other platforms like netflix or linkedin
+they kind of filter out the most important and most relevant items to a user or a
+customer now you're probably wondering what is a
+recommender system a recommender system is just like any machine learning model
+you start with some data you pass it into the model and it outputs predictions in this
+scenario our data is a user's preference towards a product this can be either in the form of
+explicit feedback where a user directly likes or rates an item so for example
+on imdb for um you can give a rating from on a scale from one to five
+that would be explicit feedback or there's also something called implicit feedback which is more subtle
+and it includes indirect behavior such as how many times did you replay a song how long did you read an article for or
+how many times did you buy the same thing on amazon by feeding this data into a recommender
+system we get predictions about a user's future behavior so which song they'll like next
+which movie they'll binge watch or what products they're more likely to buy these are what we call recommendations
+the two most important approaches to recommender systems are collaborative filtering and content-based filtering
+so collaborative filtering is based on the premise that similar people like similar things
+let's say we're building a movie recommender it doesn't know who we are or what the movie is it only looks at
+our interactions and the interactions of other user other users with a movie
+so the core data of collaborative filtering is the user item matrix or as we like to call
+the utility matrix so in this matrix each row represents a
+user and each column represents a movie the cells represent a user's rating towards
+a movie and our goal in collaborative filtering is to fill in these blanks so to guess what a user would have rated
+an item or a movie based on their past rating behaviors
+one barrier though with collaborative filtering is something called the cold start problem so when we have new users or new movies
+so in this case like entirely empty rows or entirely empty columns we're not able to generate
+recommendations for these people with collaborative filtering it just doesn't work so
+what we can do instead is use a technique called content-based filtering and content content-based filtering
+tackles a cold start problem because it looks at the content of users and movies the features
+it takes into consideration your traits such as gender and age as well as traits of the movie such as
+the year it was produced or whether it was funny or scary and it doesn't need to know anything
+about ratings so in the tutorial today we are going to
+explore both of these concepts um and like i mentioned earlier um for the environment setup
+you can either run the notebook locally you can run the notebook in the cloud um and
+we're going to be using something called the movie lens data data set so movie lens was
+created by the university of minnesota um it was with and within this
+university there's a group called group lens um and they have this platform where
+anyone can sign up and recommend or and rate movies and it'll generate
+recommendations for you the beauty of this though is that as you participate in the movie lens platform
+you're actually contributing your data to this massive data set that they've created which is now used
+for many research projects and um also for teaching so we're going to be using the movie
+lens data set it's basically the titanic data set of recommenders and it's pretty awesome
+um if you're interested in getting record like being generated recommendations yourself on movies
+um feel free to sign up for movie lens accounts and indirectly you're actually contributing
+to recommender research which is pretty cool
+okay so um i hope you can all still see my screen
+here with the github page so like i said before we are going to get started with this tutorial
+and um for those of you who are going to run this locally you should
+open up the tutorial walkthrough notebook
+and it should look like this with empty blanks here or like blanks
+um and for those of you who are not who are going to be going with the other option to run it on the google
+on google collab uh you should open this notebook so just click on this link
+which will take you to google collab and if you have a gmail account which is the only requirement
+what you can do is just save this to your drive and then you can start
+working on it directly and it'll become it's you're basically duplicating it um and
+you can make all these changes and and save it within your own account
+so for me i am going to be using the jupiter notebook version so i already
+have this set up for myself and i have opened the tutorial walkthrough
+um everyone see this
+that suck okay if anyone has any questions
+um or you want to like just stop and think wait a minute what are we doing or
+how do we install this or if you have any technical issues also feel free to just uh
+ping in the chat or also speak up uh uh like directly
+rochelle says where do we get the link from oh okay i'm gonna re-post the link so i am posting the link in the
+chat and you either clone the repo
+and then um spin up your own jupyter notebook server and open
+tutorial walkthrough or you can go to google collab and the link that i just showed earlier
+and duplicate the notebook and edit it from there awesome cool so
+here's the tutorial outline um it's broken down into seven steps um like i said we're using the movie
+lens data set um but uh so the steps are importing the
+dependencies loading the data exploring the data and pre-processing the data and then we're
+going to get into actually building the recommender system so collaborative field we're going to do collaborative filtering using a
+technique called k nearest neighbors um we're going to handle the cold start
+problem with content based filtering and then lastly we're going to use apply something called matrix
+factorization if we have enough time alrighty
+so the first thing we have to do is import our dependencies um the packages that we're going to be
+using today are numpy pandas matplotlib and seaborn um is everyone here familiar
+with these packages particularly pandas and matplotlib
+awesome cool um so yeah we're gonna be doing a lot of data
+manipulation initially and so having some experience with pandas would be awesome
+um okay so step two we are going to load the data and we are loading this data from the
+movie lens site i already did this for us ahead of time so i have these links here which i
+hosted in ews but what you can also do is download it yourself
+so if you go to this link you'll see there are all sorts of um
+different variations of the data set you can look at so the more reads like a maths of one have 25 million ratings
+um some of them have synthetic data or synthetic data sets with one billion
+ratings um but for us we're going to be looking at the uh small latest data set
+which is good for education and um yeah it's it's pretty
+pretty comprehensive okay so we're going to load our data sets ratings movies
+and we're going to take a look at what these look like so ratings we can see that there are
+four columns user id movie id rating
+movies dot hand and then movies movie id
+title and genre and so the first thing that we're going
+to focus on is ratings um so let's just first see how many ratings there are um we can do that by
+just getting the length of the data set so length of ratings um so here this represents a a rating
+made by a user for a given movie we're just counting how many ratings there are in this data set
+and then how many movies um we could do ratings movie id dot and unique
+that will get get us the number of unique movies ratings
+and then for now users ratings user id dot enik
+cool and if we run this we can see that there are just over a hundred thousand ratings um
+just a little less than 10 000 movie ids 600 users and we can see that the
+average number of ratings per user is 165. so
+that's quite a bit um a lot of data that's probably not um the most
+realistic uh the most realistic data that we would get like this seems pretty dense
+and in most cases we'd have very sparse data with people only having a couple of interactions with the movie
+um but anyways uh average number of ratings for a movie is 10. okay so let's now look at the
+distribution of ratings um i like using this package called seaborn um
+and it's really it works really nicely with data frames so since we have our ratings
+data frame we're just going to
+look at the distribution of ratings we wanted like i'm just
+curious to know how many of our users are pessimists or optimists are we getting a ton of
+ratings that are like four and fives or is it kind of uniformly distributed
+we can see though that there are quite a few ratings that are um leaning more towards the optimist or
+like positive side um a lot of fours fives some threes not so many ones and twos
+which i think is pretty common usually when people decide to rate something they'll
+[Music] rate something that they like and they'll give it a good rating
+okay so let's see what the mean global rating is 3.5 and then we can also see
+what the mean um what the the mean rating is per user so
+to do that we're going to group our ratings by user id
+and then for each user id we're going to get the rating and calculate the mean so the mean
+rating per user is 3.66 cool so which
+movies are most frequently rated um here to do that
+um we could do is to um
+ratings movie id value counts
+but the thing is we don't know so so this is telling us movie id 356 has 329 ratings
+but we don't actually know what this movie is like what the title is so what we can do is actually get the
+movie title by merging um or joining the movies data frame with the ratings
+data frame so let's just do that really quick so we'll do ratings merge it
+with movies and then we're going to merge it on movie id
+okay so movie rings
+so we're just adding some extra info to our ratings data set and now let's just try this same process
+again but instead of looking at movie id we'll just look at title
+and let's look at the first the top ten so these are the movies that
+have the most ratings forrest gump shawshank redemption pulp fiction um they
+are the most pot like they're they have been rated the most
+so now let's see what the highest and lowest rated movies are
+we can do this by um getting the mean reading for a movie
+and then finding out which one has the lowest rating and which one has the highest rating
+so i'm just reading this message it'd be neat to try looking at the number of times the movie has been viewed started versus how many times
+it's been rated to estimate more data in the negative end of this of the spectrum yes totally um i think that it would be
+really interesting to to get this implicit data um in fact a lot of research has shown
+that implicit data is probably the gold standard for
+for using and in terms of like movie recommendations because oftentimes
+people give biased ratings on movies and the best way to
+really know what movie a person likes is by looking at their behaviors for example i remember listening to a
+talk where they said many times you'll see this awesome documentary and think yeah that's five stars but
+it's not like you're going to want to watch that every single day whereas maybe there's another guilty
+pleasures show that you are kind of addicted to but you would never admit that you'd give it five stars
+you'd probably give it like a two or three but at the same time you are what you you're binging it and you're watching it constantly so yeah i think implicit
+feedback uh would be really cool unfortunately we don't have that data for movie lens but uh there might be other
+data sets out there that we could use um maybe in another tutorial
+cool okay so now let's look at what the um highest
+and lowest
+so let's just we've created mean ratings here which is where we get the mean rating for a
+given movie and we want to know which movie has the lowest rating so um we get the index of that
+and then what we can do with some great pandas manipulation is
+oops
+is um yes so we're getting the index that has the lowest rating and here we can see gypsy is the lowest
+rated movie now highest rated um what we do is mean ratings
+rating dot idx max and then so let's just see what that
+looks like oops sorry i'm just getting my notation
+mixed up okay so the lowest rated movie is index 15 53
+and if we do this we can see that um highest rated
+is lemerica but let's see how many ratings lumerica had
+because i have no idea what this movie is i've never heard of it i actually looked it up later i think it's like a movie um from the
+90s and it didn't really have the it isn't
+the most popular on other sites that i saw but we could see that it only had two ratings so it did it
+might have had a perfect 5.0 rating but again it only
+had two ratings so a better approach to looking at what
+the most popular movies are and highly rated versus like lowest rated movies is to use something
+called the bayesian average so we do that um by following this
+equation where we have c which represents our confidence multiplied by m represents representing
+our prior plus and you add it with the sum of all of the
+reviews and divide it by c and the count of all the reviews
+so i think it's easier to just like write this out ourselves and see what it looks like but um here i just want to note that c
+represents our typical data set size um and it's basically the average number of
+ratings for a given movie m represents the average rating across
+all movies so the first thing we need to do is get c and m and to do that um what we do
+here is uh use something called group by which we did before so we're
+getting ratings we're grouping it by a movie id we're getting rating so for a given
+movie we're getting their ratings and we are going to apply two aggregate functions
+we're going to apply the count aggregate function and the mean aggregate function
+so actually so here for a given movie id we get um we see
+how many times it's been rated and also what the mean rating is
+so c in this case uh is so we're using movie stats and we're going to get the count
+and we're getting the mean count and then we're getting the mean mean for m
+let's just so here we could see that the average number of ratings for a given movie is
+10.37 the average rating for a given movie is
+3.26 the bayesian average now
+is going to be the equation we listed above so i'll just implement it in python so we're doing c
+times m plus ratings dot sum and then we're dividing it by c
+plus ratings dot count so ratings dot count is n and ratings
+dot sum is like the sum of all reviews or ratings that we have here
+okay so um we have our bayesian average function let's just test this out on america so
+um the way that this works is um we're gonna the input the input of this
+function is a panda series and so what we have to do is pandas series five
+five so we're just saying okay these are the two ratings for lumerica
+we're passing this in here and we see that the beijing average of america is
+3.54 it's not as high as we originally thought it was
+um what we can do now is apply this beijing average to all of our movies and
+really see which ones are the most popular so let's go ahead and do that we are going
+to get ratings group by movie id then we are going to get rate so after grouping it by movie id
+we're going to get the rating and then we're applying this aggregate function which we developed
+ourselves and let's just see what this looks like
+so this gives us the beijing average um the output of this right now is a panda series we want to have this
+as a data frame so to do that we easily just do reset index um and then i'll show you in a sec
+what that does so this creates a it converts the series to a
+data frame but the next step we want to do is reading the columns because uh we want to make sure that we indicate
+that this is the beijing average rating so i'm just going to rewrite the columns here um so it's b
+you just do the data frame dot columns and then list the column names um
+[Music] so let's just see what that looks like and then lastly
+what we want to do is append beijing average ratings to our movie
+stats and then i'll just show you what it
+looks like now so we have the movie id movie count mean
+beijing average but now we let's find out what these movies actually are let's see
+what the titles are to do that we are going to now merge movies onto movie stats
+so movies is our data frame with all the movie info we are going to um just get the
+sorry movie id and title so for those of you who aren't too
+familiar with pandas what this is basically doing is it's creating a new data frame
+that only selects two columns from movies movie id and title and we're going to be merging it with
+movie stats so let's see what this does
+okay so we can see that we have the title here now let's sort
+our values by [Music]
+let's sort our values by the basing average
+okay so we can do ascending
+equals false so that we get the highest to lowest rated at uh
+average ratings and we see that lumerica is no longer at the top um the
+most popular and highest rated movies are in fact shawshank redemption godfather
+fight club star wars um and this makes a lot more sense um they're critically acclaimed films
+and they also have just had way more ratings so 300 192 318 um yeah
+we can now apply we can now like reverse the order of the data frame to see what the lowest rating movies are
+to see what the lowest rated movies are so here you can see we applied ascending
+equals false um the next thing we can do is ascending equals true and that's just going to this line of
+code here will give us the top five lowest rating rated movies
+according to the beijing average so yes speed two battle earth godzilla anaconda um
+yeah gypsy is not in this list i guess it's not so bad after all but as you can see these are um not
+not uh very popular or people have given it lower ratings in general
+so yeah cool okay so the next thing we're going to do
+is take a glimpse at our movie genre so we focus mainly on the ratings data frame this time
+um let's shift our focus now to the movies data frame
+so what we are going to do is let's just remind ourselves what this data frame
+looks like so we have movie id movie title
+and genre um the first thing we want to do is clean this up a bit because genre right now is just a string
+with all of the different genres um separated by these pipes
+um we can clean this up and kind of generate that a list instead of this string and
+we do that by uh applying this function to the genre
+column so what we're going to do is lambda x x dot split
+and we're splitting it by the pipe so let's see what this does
+cool so instead of having this string we now have a list um
+and what we can do next is now count um the most frequent genres in our
+data set so uh we can use this nifty function in python called uh the counter and we
+it's it's origin like it's a python function but we have to import collections
+so it's not like you have to do like a pip install um what i meant to say is like it's a python function that's in
+it comes it's like it's built in but you have to install collections so from collections import counter and
+then to get the genre frequency we're going to use the counter and do g
+for genre in movies genre 4g and genre okay let's see what this
+does so we can see what the most popular genre are and we do that
+using this cool method um that we can apply onto counter so there when you do
+uh dot most common and you pass in five it'll get us the five most common genre
+drama comedy thriller action romance but you know what let's try to visualize
+this um as a bar plot so to do that we are going to do genre frequency
+df that's going to be our new data frame we're creating we're going to do data frame
+genre frequency let's see what this looks like
+okay so we have this weird looking data frame this is not how we want it to look what we need to do is flip it flip this
+so that this row becomes a column and to do that we use the transpose function so
+this is what the transpose function does but again we see that um the genre name is actually the index
+right now that's not what we want um we want this to be a separate column
+so we've used this reset index before we're going to do it again here and
+there you have it we now have um our genre frequency data frame
+where we have um one column showing genre name and then the other column showing the
+count of genres so let's now rename these columns so we
+have a genre and then we can call this one count
+let's see what this looks like cool
+okay so we can now easily plot this using seaborn and there is a pretty nice
+function called bar plot you can do x equals genre y equals count data
+equals this data frame
+we cannot see what the x-axis is it's all overlapping i think what we
+should do is rotate this so we use um
+so for those of you who aren't familiar with seaborne it's actually a library that's built off of matplotlib so while the bait like the
+base fun the base uh function we're using here is seaborne we can now apply um additional steps to
+it from the matplotlib library so matplotlib xtx allows us to rotate the axis
+titles by x degrees so here we want to do rotation equals
+90. it's a little easier to see
+another thing i want to do to this plot is maybe sort it by count
+ascending equals false so that we can see what the most popular genre are from
+highest to lowest cool um another nice thing that i really like
+about seabourn is that it has um some really nice palettes you can apply so this gives like a cool
+purple blue yellow palette viridis or you could use magma
+so yeah you can play around with that later for those of you who aren't familiar with it if you use r
+this is also like these same palettes are available in ggplot
+okay so great we did all of our data explore
+exploration um we have a better sense of what our movies and
+ratings data set look like now the next step we want to do is start pre-processing our data so the
+way our data is currently formatted is like this so we have user id movie id rating
+but as i showed in the presentation we need to create our user item matrix
+and we need to have this matrix where we have users movies and then inside the matrix
+we need to populate it with the actual ratings and so um i have already created
+a function called create it's called create x there are a couple of blanks that we're going to fill in but essentially what
+this does is creates this matrix and it also generates four important dictionaries because
+um when you create this this um this this matrix you need to keep track
+of which row represents which movie id and which or sorry which row represents which user id and which
+column represents which movie id um and so we have created four different
+mappers user mapper maps user id to the user index
+movie mapper maps the movie id to the movie index
+and then the inverse mapper does it the other way around so it maps user index user id and then movie index to movie id
+if that makes sense cool i'll i'll show you as well as we go through
+this code so i'm not going to go into the details
+too much on this function um but essentially what we want to do here is
+we're defining m and n um in retrospect maybe those aren't the
+best uh variable names but essentially m is number of movie ids
+and then n is number of m is number of user ids and is number of
+movie ids um and then we create these two mappers so we have a dictionary that maps user
+id to the index that we're going to have in our matrix
+as well as movie mapper um so let's just see how this works
+okay so create x um returns these five variables
+x and then the four dictionaries what i did here is i um now applied
+crate x um and then so sorry i'll uh
+respond to that message in a sec so yeah we're applying create acts 2
+ratings and we're generating these four mappers as well as x
+one thing i want to note though is that we're using a csr matrix which is a sparse matrix
+inside scipy and so even though this is the size of our matrix it's
+quite large it all of the empty
+cells that don't have any data they're actually empty um it's it's quite space efficient
+whereas if we had this represented as a data frame all of the empty cells would actually still take up
+more space so i'm just going to show you what our user
+mapper looks like so this is our
+user id and this is our user index so user id is represented by index 0 in
+our in our x matrix if that makes sense um yeah in this specific data set our
+user ids are quite clean so it's like from one to x um but in some cases there could be very different
+user ids where like id 999 is linked to index zero and so this mapper
+is super important to make sure that the translations happen properly okay so the next thing we want to do is
+evaluate sparsity because this is really important to determine whether or not
+it's really important to know how sparse your data is to determine whether or not
+collaborative filtering is suitable uh as a recommender because if you have data that's way too sparse
+meaning maybe you have just so many rad movies with no ratings and so many users
+with no ratings you're probably better off using content-based filtering so let's just take a look at what we
+have here so we're going to get we want to know how many cells are in our matrix so we do
+x shape zero times x shape one
+we're just basically multiplying 610 by 979 7724 and then n ratings
+um we use this function called nnz and nz
+counts the number of stored non-empty elements in our matrix and so we then divide number of ratings
+by the total number of cells and when we do that we see that the sparsity is 1.7
+so that's actually pretty good um i've listened to lectures and heard um and and read things saying that
+on average if you have a sparsity of 0.1 or above you're good to go but anything
+lower you should probably consider content-based filtering
+okay so now let's take a look at um
+how many um how many ratings our users have like uh
+who are our most active users so we do that by doing get x dot
+n n z axis equals one so we're just manipulating this this x matrix
+we can confirm that it is indeed 610 users
+and we see that our most active user has rated over 2000 movies and our least active
+rate user has rated only 20 movies
+now let's see a number of ratings per movie so we do get an nz and then instead of axis equals
+one we do access equals zero
+um and as you can see uh this represents the total number of movies and then if we apply this we see that
+the most rated movie has 329 ratings and the least rated movie
+only has one rating
+so now let's just plot this out
+and yeah we see that for the most part um there
+most users have rated like i don't know exactly what the scale is but maybe like
+less than 100 movies um and then most movies have also like less than definitely less
+than 15 50 ratings have they've been rated by less than 50 users essentially
+cool okay so now that we have our x matrix um and we are pretty confident that we
+can continue with content collaborative filtering because um we've seen that our data is not too
+sparse what we can do is start by generating our collaborative filtering model so
+we're going to be using a technique called k nearest neighbors and essentially what we're doing is we're going to find
+the k movies that have the most similar user engagement vectors to movie
+i um again i've created this function here that makes it very easy for us to
+just plug in the numbers i have left a couple of empty um blanks though and i'm just
+gonna walk through how we do this um
+so we're using this scikit-learn model called nearest neighbors and here
+we want to specify k plus 1.
+so sorry let me just step back a second so the input of some of find similar movies
+will be movie id x which is our sparse our user item matrix
+movie mapper movie inverse mapper and k um k here determines
+how many similar movies we want to find relative to movie id
+the movie idea of interest that that we're focused on
+uh another thing that we have is our input is metric which is a metric
+of that you can define within k nearest neighbors so here we're focusing on cosine similarity but
+there are different metrics that you can look at like euclidean manhattan but for the most part
+what if from what i've seen cosine is the most popular so here for n neighbors we're going to
+do k plus 1 because um the k n output also includes the movie id of interest
+so we're going to actually remove the movie id of interest and then in the end it'll give us just k and then
+to fit our data we are fitting x
+and if you run this and apply it here
+we um are so in this specific example we're generating similar movies
+from movie id one um and we are getting the 10 most similar
+movies to it the output gives us the movie the
+the recommended movie ids but um one nice thing for us to do is um
+generate this so that it's more like user friendly and we can read what the actual recommendations are
+like we don't even know what movie id1 is right now so to do that we are going to create
+a movie titles dictionary which [Music]
+um which um returns uh
+sorry so we're gonna create a movie titles dictionary which maps movie id to movie title so
+let's just do that first and see what it looks like
+so here we could see movie id one is toy story jumanji grumpy or old man cool
+and then we're just going to repeat the same
+steps that we did above but here we are going to do print
+movie titles all right so um because you watched
+movie title and here movie title we're getting the title of movie id1
+these are your recommendations so because you watch toy story we recommend all of these other movies
+which i actually think is pretty cool um the most similar movies to toy story are toy story 2
+jurassic park independence day they're all sort of family friendly movies from the 90s
+cool
+in this section i kind of just talk about how you can try out different metrics so there's euclidean manhattan if you go
+to the k and n library so okay nearest neighbors
+sk learn [Music]
+we can see that there are different metrics to play around with and you can check out the distance
+metrics here cool
+all right so um collaborative filtering is great and all but what happens when we have
+movies that don't have any ratings or that have very few ratings and also when we
+have users that have very few ratings this is where content-based filtering
+comes in and we're going to basically repeat this whole process we did above
+using k nearest neighbors but instead of using ratings we're going to look at the genre so as you recall earlier we had the
+movies data frame which had movies the title and then the genre
+we're going to create a matrix that generates we're going to create a matrix
+that represents um all the genre for movie for different movies and then apply k n using using this
+technique so um it'll get it'll make more sense as we continue on
+but let me just get started here okay so
+first let's see how many movies we have in our data set we already know this 909 7742 unique
+movies and then to get the genre we're going to do so we're going to get all of the unique
+genre whoops g 4g we kind of already did this before
+but i'm just going to repeat it for clarity
+whoops okay so these are our unique genre
+and then we're going to loop over genre we're looping over this set and we're
+going to create a new column so let me show you how this is done
+we're going to create a new column that um for each genre and um how we do this is
+we do movie genre transform and then lambda x and then int gnx
+cool and so if we just take a look at movies
+we now um see that instead of having this one genre column we've spread it out into multiple
+columns and that are all binary where one represents uh that this movie does have this genre and
+zero means that this movie does not have this genre if that makes sense um
+but in order for us to create like a nice matrix with this we're gonna have
+to drop movie id title and genre and i do that in this line here so let
+me just inspect this for you so we can see what it looks like cool so each row here represents a
+separate movie
+now the next thing we want to do is use something called cosine similarity
+which again is a tool from scikit-learn and we're going to apply this to movie
+genre against movie genre to measure the similarity similarity between movies based on their
+genre features so we applied this cosine similarity
+and we see that the shape is number of movies by number of movies
+and it's populated with zeros and one it's populated with values between zero
+and one which represent the degree of similarity between movies along the x and y axes um
+so again i can just show you what that looks like
+so this means it's very similar one means it's very similar zero means
+it's not similar at all in terms of genre
+okay so now let's um create a
+movie finder function um with this movie finder function it'll
+just be very easy for us to write a title of a movie that we're interested in and get the movie id for
+us because before i was showing you these dictionaries and mapping an id to a title and um instead why don't we just create a
+function so uh in this example we're going to use a package called fuzzy wuzzy um i'm not sure if anyone
+here is familiar with it but it's a pretty cool tool that you can use and it's going to
+generate it it's basically going to take in the title that you give it and find out what the
+most similar title is in our data set because i don't know if you've noticed
+but if we take a look at movies again we can see that the title is very specific and
+i might forget to add 1999 the 1995 beside jumanji
+i just want to know what the index is for jumanji so let me just show you how this works
+so we're going to get all of the titles from movies and then we're going to
+use this fuzzy wuzzy function called process extract one
+where we pass in the title of interest and we compare it
+against all titles and then it's going to return the closest match
+so we can try this out with jumanji and here we can see like we misspelled
+jumanji but the closest title to this string is jumanji1995 which is pretty cool
+um and so now that we have movie finder we are now going to map this to
+movie index so we see that uh for
+the movie titled jumanji the index is one not
+so before we saw that the movie id of the movie id one is toy story i
+believe but the index is um something different
+sorry if that if that confused you let let me know and i can walk through it again but um i realized maybe i should have
+given more context so the movie i index is one but then the
+movie id i believe is two okay so
+using this handy movie index dictionary paired with our movie finder
+function we're now going to see what the most similar movies are to jumanji
+based on our genre features that we've generated and so to do that i have created
+um this uh sim scores list
+and i'm just going to show you like in step by step what's going on
+okay so we have cosine similarity and then we're going to get the index
+that we've defined for jumanji so we're picking out the one the one row
+that has all of the um similar movie comparisons to jumanji and we see that it returns a
+list of tuples the tuples here represent the movie index and the
+score so the next thing we have to do is we want to sort this from highest to
+lowest score um and we're going to do that by doing sorted sim scores
+p lambda x x1 what this is doing is it's getting the
+second element of the of all the tuples and sorting just that we don't we don't want
+to sort it by movie index we want to sort it by the second element which is the score
+okay and then reverse equals true because we want it to be in descending
+order
+so let's take a look at what's going on um sim scores
+let's do so we're going to get one two n
+recommendations plus one um [Music] so the reason why i'm starting at index
+1 and not 0 is because index 0 here actually represents jumanji the movie
+um and we don't want that to be incorporated in our recommendations
+okay let's see what this looks like
+cool so these are the most popular movie indices and to get similar movies
+i'm going to do similar movies equals i o for i and sim scores so i
+i'm basically just getting the um the first element of all the tuples
+which is the movie index let's see what this looks like cool
+now what we want to do is um translate this from uh the index to
+the uh movie title so we can see because you watch jumanji
+here are all of the most similar movies um that are given to you based on on uh
+similar on based on the genre features
+cool we can see that they're pretty uh
+they look pretty good uh they're all sort of family-friendly movies
+from the 90s or from earlier and what i've done here in this example is
+i've kind of compressed all the steps that we did into a single function so you can play with
+this on your own if you'd like so we can see for toy story
+um it generates ants toy story 2 adventures of rocky and bullwinkle
+um and you can also play around with how many recommendations you'd like to generate
+all you really need though like the core of this whole recommender is the cosine similarity matrix that we
+created a lot of the rest of this code is just manipulation
+awesome
+okay so the last section um that i wanted to go through was dimensional dimensionality reduction with matrix
+factorization and this is really important when you have a sparse data set
+because when you have a sparse data set it's really hard to find similar movies and
+it's also very computationally intensive to work with such a massive matrix so
+what matrix factorization is is um it's a linear algebra technique that
+helps us discover latent features underline the interactions between users and movies
+um and so essentially what it's creating is um two latent matrix matrices so a user
+factor matrix and an item factor matrix where we have the users by
+k latent features and here we could think of a latent feature as some compressed feature that can't
+we can't really explain but an example could be like uh for a movie latent feature could be
+like foreign films focused on japanese anime for example
+or um indie movies from the 90s so we're
+basically compressing our original matrix into something more condensed and it's creating like a taste
+dimension for us where we're just really focusing on the user tastes or
+on the specific flavor of a movie
+again like i said we cannot interpret what each latent feature k represents
+um [Music] but i uh yeah here i explained that uh
+an example of a link feature could be users who like romantic comedies from the 90s or movies which
+are independent foreign language films um so to one way of computing matrix
+factorization is to use a technique called single value decomposition so svd
+and again this is something that we're going to be using from scikit-learn
+and to do that we are going to define how many components we want so here k represents number of
+components um okay
+and then number of iterations is just how many times you want to iterate over
+this and until we converge so i guess more iterations is better but
+um it's also more computationally complex so it's a bit of a trade-off
+and then q in this case we actually need to get the transform
+of x so we had movies by users or sorry users by movies
+the way that svd works we actually need to do um
+movies by users and it's going to we're going to be creating this q object
+so we have n movies the output of q
+is um n movies by n components that we've defined
+uh yes that is a good question so um n components is a hyperparameter
+and iterations is not so n components is a hyperparameter that we can tune and
+the more components we have the less compressed um whereas the fewer components so let's
+say we only want five components they'll be more compressed and there's sort of this um
+happy number that we need to find that will generate the most um accurate
+recommendations for us here i just chose 20 um and essentially what we're doing is we're
+we're going from um like over like over hundreds of it's
+that instead of having a column that or sorry let me just
+instead of having a matrix where there are 610 columns for movies we're now
+creating a matrix where there are only 20 columns for movies so we're compressing all of this down to
+20. the more we compress this down the more compact the info is at some
+point we're going to start losing information so yeah it's important to find a good
+number there and there are techniques to tune this
+but we're not going to go into that today because with that you need to define what you're
+trying to optimize you need to kind of define an evaluation metric
+um but again maybe i can go through this at another time
+okay so q shape we have number of movies by number components
+um movie id uh let's just do that here and then we're using um
+similar the the find similar movies function we had but above but instead of passing an x we're going
+to be passing in the output of svd so q but again um
+q like the way that find similar movies works is it actually needs the um
+the components by number of movies not the other way around so we have to kind of reverse the transpose
+that we did earlier and so let's see
+how this works cool so we see here that there are um
+similar there's a list of movies that are similar to toy story that are all from the 90s and again like
+sort of family movies um and whether or not this is better than the
+non-matrix factorization approach i'm not sure um there are many ways to evaluate that
+like i mentioned but i'm not going to be covering that in the tutorial today
+yeah so this is the last step that i wanted to go through it shows how you would go about
+generating recommendations using the compressed movie factor matrix [Music]
+and maybe i'll quickly go through what some examples of evaluation metrics
+are are there any questions though in the meantime
+okay so i'm just going to take this slideshow from
+[Music] what i've done in the past and
+i'm just going to quickly go through how we would go about evaluating a recommender system um and
+and some of the metrics that we would consider so how do we evaluate recommendations in
+traditional machine learning as some of you are probably aware you have your original data set
+and you split it uh like in the middle with a training set and a test set um
+but this unfortunately won't work for recommendation systems because if you split it in the middle
+you could be having like some users only in the training set
+and then some users only in the test set um that won't work because you'll train it on users that
+are in train and that you'll train it on users that won't be found in the test set so what we have to
+do here is actually mask our matrix instead of cutting it in half we're
+masking different values in our matrix pretending as if we didn't know what a user rated
+and then to evaluate the performance of our model we pretend what we don't know what they rated and then we generate the
+recommendations and we compare what they rated versus what our record what our predicted
+rating was and that is how sorry that is how we evaluate the
+performance so some approaches here are to look at
+root mean squared error precision recall f1 precision recall f1 these are all
+information retrieval metrics and specifically what is very popular in the recommender
+system world is to look at precision at case so of
+the top k recommendations what proportion are relevant as well as recalls so the proportion of
+items that were found in the top k recommendations precision is the number of true positives over
+true positives plus false positives whereas recall is the true positives
+over true positives plus false negatives so here we can see that precision
+is trying to minimize false positives and recalls trying to minimize
+false negatives so an example of false positive would be predicting that
+a user um i guess including a movie and a recommendation
+that that shouldn't have been in that recommendation and then recall would be uh include
+not including a movie and recommendation that you should have included if that makes sense at all
+okay so um oh sorry one last thing i wanted to say so precision at k precision at
+recall k here k represents the number of recommendations you're looking at
+so um you could say 5 10 100 um
+yeah um other important considerations for a recommender system
+are to uh consider interpretability um efficiency and scalability so
+i know from my experience trying to build a recommender system you could try to build something so
+accurate and perfect that gives what you think are awesome recommendations but if it's not scalable
+and you can't run it on a regular basis it's probably not a good approach for a production
+level recommender um also considering diversity so
+how diverse are the recommendations considering the serendipity factor like
+suggesting movies to someone that they probably wouldn't have considered
+otherwise so yeah recommenders are pretty awesome
+i hope you kind of got a taste of what it's like to build a content-based filtering and collaborative based
+filtering model um and if you have any questions or
+want to chat about it more feel free to reach out
+um yeah that's that kind of wraps up my tutorial um
+thanks everyone
+are there any questions
+okay how do you how do you convert precision recall roc receiver operating curve etc
+when your result is continuous instead of binary if we're trying to
+guess that someone would have rated and the true is 95 but we guess
+94 wrong that's wrong but not very wrong
+right um yeah that's a really good question um and i know that there are other
+techniques uh to evaluate the results
+uh that aren't uh that aren't like precision recall and
+whatnot um but uh yeah i sorry i don't really have
+an answer for you right now i can get back to you and and look into this um but good question
+cool well if there aren't if if you have more questions um feel free to reach out to me uh my email
+maybe i'll just post it here kate's jill gmail.com
+okay another question could you please say a bit about what motivates people to
+build recommendation systems using deep learning
+hmm so i i can't say too much about
+why people like what motivates people to build recommendation systems using deep learning in a production
+level environment um because as we know the more data you have and the more
+complex um your system becomes the harder it is to implement some sexy
+cool model like deep learning in the research space though there's tons of research going towards
+building more accurate or more interesting effective models using deep learning
+that maybe at some point can become production level i think really the barrier though is
+computation so as we become more efficient with building deep learning recommenders
+i'm sure that um it'll become more prevalent
+but i know from my experience even at my current job we deal with massive data sets so
+while all these awesome and interesting machine learning models are really cool and can generate really
+awesome predictions it's not the most practical thing to have when you're dealing with pay to
+petabytes of data
+how would you implement a shift in users taste in time as people age their ratings might be
+different um yeah so there definitely is a time
+component to consider what you could do is um
+kind of create so one thing i didn't really share with you is uh the concept of implicit feedback
+and also kind of generating your own score so like i showed before uh for users
+or so so in the user item matrix we have users items and then it's populated with
+all of these different values in our example all of these values were
+explicit ratings of users but what you can do is generate your own
+composite score so maybe what you could do is have it weighted towards time and instead of so you could have like a
+rating and you multiply it by some time factor and that's one way to kind of consider
+the shift in taste over time um and also to consider
+other factors like implicit feedback features so one example of a score is
+in your in your cell that you have in your matrix you could have your explicit rating
+times some time variable and then add in some implicit feedback information so
+maybe you could see did they actually watch the whole movie or did they replay the movie did they stop it at the very
+beginning like all of these different features you can create you can add yourself and
+create your own score um one thing i would like to add though is
+when from my experience when i created i have created my own score i would consider the behaviors that i
+wanted to drive among my users so back in the day i created this medical recommendation
+medical research paper recommender and i had all these different features like
+number of views how long that did they read it
+did they just read the abstract or the whole paper and one feature that i wanted to drive
+further was reading it for a very long time so i didn't consider whether they liked it or
+shared it i only wanted to focus on the length of time that they spent reading it
+and that's what i populated with myself um i hope that makes sense
+um yeah i've heard aws and google both offer recommendation engines as a
+service i personally haven't used these before um but i'd really like to try it out and see what it's
+like i guess my one worry with aws is that especially from my experience
+working at a startup things can get very expensive so if you have a big budget or if you have a big budget like
+that's awesome you should definitely try using it but in situations where you have this recommender system that's
+part of your business and you really need it to be running on on a frequent basis
+and you don't have have the resources to to use aws i'd say doing it in-house is the way to
+go things just get so expensive with these cloud platforms
+how often do you retrain the recommendation model i think it really depends um it depends how fresh you need your
+data to be i'm sure i have no experience or no knowledge about how it works at
+amazon netflix or any of these companies but i'm i have a feeling that some of them are
+retrained on a pretty frequent basis um and they also consider things like
+if you shopped for toilet paper today
+should they be recommending toilet paper for you tomorrow because you already purchased it no um so there's a lot of logic involved
+there too and same goes for movies so one step i didn't show in our process was
+post-processing but let's say you already watched this movie before and you rated it highly
+should we include that in our recommendations probably not because you already watched it
+um so yeah
+can i talk about the infrastructure to productionize a model um
+[Music] there are many different ways to productionize a model i could speak
+briefly about how i worked on building a production type
+model back in the day this is in my previous role when i worked on the medical
+research recommender that i i talked about so uh how it worked was
+we basically took in the data from sql we transf we had all these different
+steps just like what i mentioned in our tutorials so we had our pre-processing step where we
+wrangled the data into the right format we were looking for so in this case we created a user item matrix
+we populated the cells with this score that i talked about so we incorporated both
+explicit feedback and implicit feedback and then we trained our model
+using so there are many different ways to train a model we use something called alternating
+least squares als where we fill in the values of the matrix predicting what we
+think a user would like and we evaluated it based on what they actually did like and
+with this technique we tuned our hyper parameters and um found and created our best model
+and then from there we kind of generated these recommendations
+for people wrote it spit it out to a sequel table and that is how the interface
+like the interface that the person was looking at would then fetch the the data from the sql output if that
+makes sense how often do you retrain the
+recommendation model um so i read well from my experience
+i think we retrained it like twice a week only because it was very expensive um
+again like depends on your budget if it's very expensive to to run a model you probably don't
+want to be running it every day maybe once or twice twice a week um
+yeah another thing i wanted to mention actually was i talked about all these evaluation metrics and how we can kind
+of guess what a user would like and evaluate it based on our own
+perceptions using offline data but i think really the gold standard for any recommender to evaluate is
+to do a b testing so to kind of expose recommendations to one
+group of people versus not versus not exposing it to the other and see how well your recommender performs
+is it actually generating more activity among your users um is it actually like
+getting more people to view movies um i think a b testing is is the way to go but
+sometimes that's not available so that's where we do offline evaluation which i talked about briefly
+cool okay well it seems like there aren't any other questions but
+these are really awesome and interesting questions i'd love to chat more with all of you about it
+and you can do so if you're interested in it by contacting me i'm also going to be
+attending a few of these lectures which i'm pretty excited about so yeah um thank you so much joe i just
+wanted to to chime in here and thank you again um if there's anything you'd want to share
+with uh the attendees here and and then the greater sort of list of attendees i can put that on the
+hoover app and also make sure that they have that in the in the email that goes up after this um
+feel free to message me and yeah thank you this was fantastic very helpful and i really appreciate you
+taking the time to uh to share your experience here thanks yeah thanks for having me it was it was
+awesome like leading everyone through this we'll be in touch and um i will um invite everybody else to still
+there's still some workshops you can register for they still have space in them and then uh again wednesday thursday we'll be joining on the platform for the
+breakouts and keynotes so thank you joe thank you everybody for attending and we will see you shortly
+thanks bye everyone
